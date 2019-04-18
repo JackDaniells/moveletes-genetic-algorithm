@@ -1,26 +1,30 @@
 
-import Breed, Fitness, Individual, MatingPool, Mutate, Population
+import MatingPool, Fitness
 
+# roda o AG
 def run(population, popSize, eliteSize, mutationRate, generations):
 
-    pop = Population.initialPopulation(popSize, population)
+    gen = population
     
     for i in range(0, generations):
 
-        pop = nextGeneration(pop, eliteSize, mutationRate)
+        gen = nextGeneration(currentGen=gen, eliteSize=eliteSize, mutationRate=mutationRate)
 
 
+# crias as novas gerações da população
 def nextGeneration(currentGen, eliteSize, mutationRate):
 
-    popRanked = Fitness.rankRoutes(currentGen)
+    # rankeia os individuos     
+    popRanked = Fitness.rankRoutes(population=currentGen)
 
-    selectionResults = MatingPool.selection(popRanked, eliteSize)
+    # seleciona os melhores para  reprodução
+    selectionResults = Fitness.selection(popRanked=popRanked, eliteSize=eliteSize)
 
-    matingpool = MatingPool.matingPool(currentGen, selectionResults)
+    # faz o crossover entre os individuos
+    children = MatingPool.breed(matingpool=selectionResults)
 
-    children = Breed.breedPopulation(matingpool, eliteSize)
-
-    nextGeneration = Mutate.mutatePopulation(children, mutationRate)
+    # faz a mutação dos indivíduos
+    nextGeneration = MatingPool.mutate(population=children, mutationRate=mutationRate)
     
     return nextGeneration
     
