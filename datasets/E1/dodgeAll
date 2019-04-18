@@ -1,0 +1,32 @@
+#!/bin/bash
+D1="1_patel_hurricane_2vs3/"
+D2="2_patel_hurricane_1vs4/"
+D3="3_patel_hurricane_0vs45/"
+D4="4_patel_animals/"
+D5="5_patel_vehicle/"
+
+DESCRIPTION="descriptions/simple.json"
+
+# Feature Extraction
+bash dodge $D1 $DESCRIPTION
+
+bash dodge $D2 $DESCRIPTION
+
+bash dodge $D3 $DESCRIPTION
+
+bash dodge $D4 $DESCRIPTION
+
+bash dodge $D5 $DESCRIPTION
+
+BUILD_MODEL="../../../programs/bmCV.r"
+RESULT_PATH="../../../results/ACMSAC2018/E1/"
+
+Rscript $BUILD_MODEL $RESULT_PATH$D1"Dodge/"
+
+Rscript $BUILD_MODEL $RESULT_PATH$D2"Dodge/"
+
+Rscript $BUILD_MODEL $RESULT_PATH$D3"Dodge/"
+
+Rscript $BUILD_MODEL $RESULT_PATH$D4"Dodge/"
+
+Rscript $BUILD_MODEL $RESULT_PATH$D5"Dodge/"
