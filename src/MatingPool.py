@@ -1,61 +1,88 @@
 
+import Population
+
 import random
 
 #TODO: revisar
-def crossover(parent1, parent2):
-    child = []
-    childP1 = []
-    childP2 = []
-    
-    geneA = int(random.random() * len(parent1))
-    geneB = int(random.random() * len(parent1))
-    
-    startGene = min(geneA, geneB)
-    endGene = max(geneA, geneB)
+def breedIndividual(parent1, parent2):
 
-    for i in range(startGene, endGene):
-        childP1.append(parent1[i])
-        
-    childP2 = [item for item in parent2 if item not in childP1]
+    ind1 = []
+    ind2 = []
 
-    child = childP1 + childP2
-    return child
+    # print("FATHER ONE")
+    # for i in parent1.movelets: 
+    #     print(i)
+
+    # print("FATHER TWO")
+    # for i in parent2.movelets: 
+    #     print(i)
+
+    #  define o ponto de corte
+    splitPoint = random.randrange(parent1.size() - 1)
+    # splitPoint = int(parent1.size() / 2)
+
+    for i in range(parent1.size()):
+
+        if i < splitPoint:
+
+            ind1.append(parent1.movelets[i])
+            ind2.append(parent2.movelets[i])
+
+        else:
+
+            ind1.append(parent2.movelets[i])
+            ind2.append(parent1.movelets[i])
 
 
-def breed(matingpool):
+    # print("CHILDREN ONE")
+    # for i in ind1: 
+    #     print(i)
+
+    # print("CHILDREN TWO")
+    # for i in ind2: 
+    #     print(i)
+
+    return Population.Individual(ind1), Population.Individual(ind2)
+
+
+
+def breedPopulation(matingpool):
     children = []
     length = len(matingpool)
-    pool = random.sample(matingpool, len(matingpool))
     
     for i in range(0, length):
-        child = crossover(pool[i], pool[len(matingpool)-i-1])
-        children.append(child)
+
+        if i % 2 != 0:
+
+            child1, child2 = breedIndividual(matingpool[i - 1],matingpool[i])
+            
+            children.append(child2)
+            children.append(child2)
+
     return children
 
 
 # mutação
 
-# TODO: implementar a mutação
-def mutation(individual, mutationRate):
-    # for swapped in range(len(individual)):
-    #     if(random.random() < mutationRate):
-    #         swapWith = int(random.random() * len(individual))
+def mutateIndividual(individual, mutationRate):
+
+    # percorre os movelets no individuo
+    for swapped in individual.movelets:
+
+        if(random.random() < mutationRate):
             
-    #         city1 = individual[swapped]
-    #         city2 = individual[swapWith]
-            
-    #         individual[swapped] = city2
-    #         individual[swapWith] = city1
+            swapped.mutate()
+
     return individual
 
 
-def mutate(population, mutationRate):
+def mutatePopulation(population, mutationRate):
     
     mutatedPop = []
     
-    for ind in range(0, len(population)):
+    for individual in population:
 
-        mutatedInd = mutate(population[ind], mutationRate)
+        mutatedInd = mutateIndividual(individual=individual, mutationRate=mutationRate)
 
         mutatedPop.append(mutatedInd)
         

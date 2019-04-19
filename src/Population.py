@@ -1,50 +1,77 @@
 
 import random
 
+# classe movelet
 class Movelet:
 
     def __init__(self, trajectory, start, size):
         self.trajectory = trajectory
         self.start = start
         self.size = size 
+
+    def mutate(self): 
+        # pode mutar o tamanho do movelet e o ponto de inicio
+        mutateOptions = [
+            'size',
+            'start'
+        ]
+
+        mutationType = mutateOptions[random.randrange(len(mutateOptions))]
+
+        if mutationType == 'size':
+
+            self.size = random.randrange(2, t.size() - self.start)
+
+        elif mutationType == 'start':
+
+            self.start = random.randrange(t.size() - self.size)
     
     def __repr__(self):
-        return "(" + str(self.trajectory.dataset) + " - " + str(self.trajectory.group) + " | Start:" + str(self.start) + ", Length:" + str(self.size) + ")"
+        return "(" + str(self.trajectory.fileName) + ":\t | Start:" + str(self.start) + ", Length:" + str(self.size) + ")"
 
 
-
+# classe individuo
 class Individual:
 
-    def __init__(self, movelets, size):
+    def __init__(self, movelets):
+
         self.movelets = movelets
-        self.size = size
+
+    def size(self):
+
+        return len(self.movelets)
 
 
-def create(trajetories, size, qty):
+def create(trajetories, size, popSize):
+
+
 
     population = []
 
     #  cria os individuos
-    for q in range(qty):
+    for q in range(0, popSize):
 
         movelets = []
 
         # cria os movelets
-        for s in range(size):
+        for s in range(0, size):
 
+            # pega uma trajetoria aleatoriamente
             t = trajetories[random.randrange(len(trajetories))]
 
-            start = random.randrange(t.size() - 1)
+            # define o ponto de inicio aleatoriamente
+            start = random.randrange(t.size() - 2)
 
-            size = random.randrange(1, t.size() - start)
+            # define o tamanho do movelet aleatoriamente
+            s = random.randrange(2, t.size() - start)
 
-            movelet = Movelet(trajectory=t, start=start, size=size)
-
-            print(movelet)
+            # cria o movelet
+            movelet = Movelet(trajectory=t, start=start, size=s)
 
             movelets.append(movelet)
 
-        ind = Individual(movelets=movelets, size=size)
+
+        ind = Individual(movelets=movelets)
         
         population.append(ind)
         

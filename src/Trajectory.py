@@ -16,9 +16,10 @@ class Point:
 
 # classe trajetoria
 class Trajectory:
-    def __init__(self, dataset, group):
+    def __init__(self, fileName, dataset, group):
         self.dataset = dataset
         self.group = group
+        self.fileName = fileName
         self.points = []
 
     def addPoint(self, p):
@@ -28,7 +29,7 @@ class Trajectory:
         return len(self.points)
 
     def __repr__(self):
-        return "(" + str(self.points) + ")"
+        return "(" + str(self.fileName) + ": \t" + str(self.dataset) + " - " + str(self.group) + ")"
 
 
 # retorna a classe da trajetoria com base no nome do arquivo
@@ -119,7 +120,7 @@ def readFiles(filePath, dataset):
        
         group = getClass(fileName)
 
-        trajectory = Trajectory(dataset=dataset, group=group)
+        trajectory = Trajectory(fileName=fileName, dataset=dataset, group=group)
 
 
         # pega os pontos da trajetoria

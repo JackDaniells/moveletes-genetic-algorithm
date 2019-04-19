@@ -4,9 +4,10 @@ import operator, random
 class Fitness:
     def __init__(self, individual):
         self.individual = individual
-        self.fitness= 0.0
+        self.fitness = 0
+        self.rank()
     
-    #TODO: implementar o classificadors
+    #TODO: implementar o classificador
     def rank(self):
 
         if self.fitness == 0:
@@ -16,25 +17,27 @@ class Fitness:
         return self.fitness
     
 
-def rankRoutes(population):
+def rankPopulation(population):
     
-    fitnessResults = {}
+    fitness = []
     
-    for i in range(0,len(population)):
+    for ind in population:
 
-        fitnessResults[i] = Fitness(population[i]).rank()
+        f = Fitness(ind)
+        
+        fitness.append(f)
 
-    return sorted(fitnessResults.items(), key = operator.itemgetter(1), reverse = True)
+    return sorted(fitness, key = operator.attrgetter('fitness'), reverse = True)
 
 
 
 def selection(popRanked, eliteSize):
 
     selectionResults = []
-    
+
     for i in range(0, eliteSize):
 
-        selectionResults.append(popRanked[i])
+        selectionResults.append(popRanked[i].individual)
 
     return selectionResults
    
