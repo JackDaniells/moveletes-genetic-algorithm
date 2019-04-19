@@ -9,7 +9,7 @@ class Movelet:
         self.size = size 
     
     def __repr__(self):
-        return "(" + str(self.trajectory.fileName) + " , " + str(self.start) + " " + str(self.size) + ")"
+        return "(" + str(self.trajectory.dataset) + " - " + str(self.trajectory.group) + " | Start:" + str(self.start) + ", Length:" + str(self.size) + ")"
 
 
 
@@ -34,9 +34,9 @@ def create(trajetories, size, qty):
 
             t = trajetories[random.randrange(len(trajetories))]
 
-            start = random.randrange(t.size())
+            start = random.randrange(t.size() - 1)
 
-            size = random.randrange(t.size() - start)
+            size = random.randrange(1, t.size() - start)
 
             movelet = Movelet(trajectory=t, start=start, size=size)
 

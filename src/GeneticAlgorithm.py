@@ -24,7 +24,9 @@ def nextGeneration(currentGen, eliteSize, mutationRate):
     children = MatingPool.breed(matingpool=selectionResults)
 
     # faz a mutação dos indivíduos
-    nextGeneration = MatingPool.mutate(population=children, mutationRate=mutationRate)
+    # nextGeneration = MatingPool.mutate(population=children, mutationRate=mutationRate)
+
+    nextGeneration = children
     
     return nextGeneration
     
