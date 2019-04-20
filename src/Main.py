@@ -2,7 +2,14 @@ import Population, Trajectory, GeneticAlgorithm
 
 import datetime
 
-print("[" + str(datetime.datetime.now()) + "] " + "program started")
+POPULATION_SIZE = 1000
+INDIVIDUAL_SIZE = 100
+ELITE_SIZE = 1000
+MUTATION_RATE = 0.01
+GENERATIONS = 1000
+
+
+print("[" + str(datetime.datetime.now()) + "] " + "Program started!")
 
 
 
@@ -21,13 +28,18 @@ print("[" + str(datetime.datetime.now()) + "] " + "Trajectories found: " + str(l
 #cria os individuos
 print("[" + str(datetime.datetime.now()) + "] " + "Creating population...")
 
-pop = Population.create(trajetories=trajectories, size=4, popSize=10)
+pop = Population.create(trajetories=trajectories, individualSize=INDIVIDUAL_SIZE, populationSize=POPULATION_SIZE)
 
 print("[" + str(datetime.datetime.now()) + "] " + "Population size: " + str(len(pop)))
 
 
 #instancia o algoritmo genetico
-GeneticAlgorithm.run(population=pop, eliteSize=10, mutationRate=0.01, generations=1)
+print("[" + str(datetime.datetime.now()) + "] " + "Running Genetic Algorithm...")
+print("[" + str(datetime.datetime.now()) + "] " + "Generations: " + str(GENERATIONS))
+
+GeneticAlgorithm.run(population=pop, eliteSize=ELITE_SIZE, mutationRate=MUTATION_RATE, generations=GENERATIONS)
+
+print("[" + str(datetime.datetime.now()) + "] " + "Program completed!")
 
 
 

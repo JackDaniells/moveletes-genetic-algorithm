@@ -10,6 +10,9 @@ def run(population, eliteSize, mutationRate, generations):
 
         gen = nextGeneration(currentGen=gen, eliteSize=eliteSize, mutationRate=mutationRate)
 
+        print('.', end='', flush=True)
+
+    print('')
 
 
 # crias as novas gerações da população
