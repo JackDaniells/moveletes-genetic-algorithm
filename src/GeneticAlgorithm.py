@@ -1,25 +1,27 @@
 
-import MatingPool, Fitness
+import MatingPool, Fitness, datetime
 
 # roda o AG
-def run(population, eliteSize, mutationRate, generations):
+def run(population, eliteSize, mutationRate, generations, trajectories):
 
     gen = population
     
     for i in range(0, generations):
 
-        gen = nextGeneration(currentGen=gen, eliteSize=eliteSize, mutationRate=mutationRate)
+        print("[" + str(datetime.datetime.now()) + "] " + "Generation " + str(i))
 
-        print('.', end='', flush=True)
+        gen = nextGeneration(currentGen=gen, eliteSize=eliteSize, mutationRate=mutationRate, trajectories=trajectories)
+
+        # print('.', end='', flush=True)
 
     print('')
 
 
 # crias as novas gerações da população
-def nextGeneration(currentGen, eliteSize, mutationRate):
+def nextGeneration(currentGen, eliteSize, mutationRate, trajectories):
 
     # rankeia os individuos
-    popRanked = Fitness.rankPopulation(population=currentGen)
+    popRanked = Fitness.rankPopulation(population=currentGen, trajectories=trajectories)
 
     # seleciona os melhores para  reprodução
     selectionResults = Fitness.selection(popRanked=popRanked, eliteSize=eliteSize)

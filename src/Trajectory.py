@@ -12,6 +12,9 @@ class Point:
     def __repr__(self):
         return "(" + str(self.time) + " , " + str(self.x) + " " + str(self.y) + ")"
 
+    def getPosition(self):
+        return [self.x, self.y]
+
 
 
 # classe trajetoria
@@ -24,6 +27,15 @@ class Trajectory:
 
     def addPoint(self, p):
         self.points.append(p)
+
+    def getPoints(self):
+        
+        ret = []
+
+        for p in self.points:
+            ret.append(p.getPosition())
+
+        return ret
 
     def size(self):
         return len(self.points)
@@ -79,9 +91,9 @@ def readFolders ():
     foldersName = [
         '1_patel_hurricane_2vs3',
         '2_patel_hurricane_1vs4',
-        '3_patel_hurricane_0vs45',
-        '4_patel_animals',
-        '5_patel_vehicle',
+        # '3_patel_hurricane_0vs45',
+        # '4_patel_animals',
+        # '5_patel_vehicle',
     ]
 
     experimental = "E1"

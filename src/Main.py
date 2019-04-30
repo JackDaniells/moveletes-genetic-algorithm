@@ -2,15 +2,17 @@ import Population, Trajectory, GeneticAlgorithm
 
 import datetime
 
-POPULATION_SIZE = 1000
-INDIVIDUAL_SIZE = 100
-ELITE_SIZE = 1000
+INDIVIDUAL_SIZE = 2
+POPULATION_SIZE = 10
+ELITE_SIZE = 10
 MUTATION_RATE = 0.01
-GENERATIONS = 1000
+GENERATIONS = 10
+MOVELET_MAX_SIZE = 10
+
+# TODO: criar um parametro com o tamanho maximo do movelet
 
 
 print("[" + str(datetime.datetime.now()) + "] " + "Program started!")
-
 
 
 #le as trajetorias
@@ -22,7 +24,6 @@ print("[" + str(datetime.datetime.now()) + "] " + "Trajectories found: " + str(l
 
 # for t in trajectories:
 #     print(t)
-
 
 
 #cria os individuos
@@ -37,7 +38,7 @@ print("[" + str(datetime.datetime.now()) + "] " + "Population size: " + str(len(
 print("[" + str(datetime.datetime.now()) + "] " + "Running Genetic Algorithm...")
 print("[" + str(datetime.datetime.now()) + "] " + "Generations: " + str(GENERATIONS))
 
-GeneticAlgorithm.run(population=pop, eliteSize=ELITE_SIZE, mutationRate=MUTATION_RATE, generations=GENERATIONS)
+GeneticAlgorithm.run(population=pop, eliteSize=ELITE_SIZE, mutationRate=MUTATION_RATE, generations=GENERATIONS, trajectories=trajectories)
 
 print("[" + str(datetime.datetime.now()) + "] " + "Program completed!")
 

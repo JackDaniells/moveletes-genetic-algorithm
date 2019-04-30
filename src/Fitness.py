@@ -1,29 +1,41 @@
 
-import operator, random
+import operator, random, datetime
+
+import Classification
+
 
 class Fitness:
-    def __init__(self, individual):
+    def __init__(self, individual, trajectories):
         self.individual = individual
+        self.trajectories = trajectories
         self.fitness = 0
         self.rank()
     
     #TODO: implementar o classificador
     def rank(self):
 
-        if self.fitness == 0:
 
-            self.fitness = random.randrange(100)
+        # print("[" + str(datetime.datetime.now()) + "] " + "Calculating Individual Fitness...")
+       
+        distanceMatix = Classification.calculateDistanceMatrix(movelets=self.individual.movelets, trajectories=self.trajectories)
+        # d = d[dtw] / |movelet|
 
-        return self.fitness
+        # print("[" + str(datetime.datetime.now()) + "] " + "Done!")
+        # usar o dtw pra calcular distancia de cada movelet pra cada trajetoria e depois jogar isso no classificador (Naive Bayes)
+
+        # salvar o dataset e fazer crossover dele tambem na reprodução pra nao precisar calcular tudo de novo
+
+    
+        return 10
     
 
-def rankPopulation(population):
+def rankPopulation(population, trajectories):
     
     fitness = []
     
     for ind in population:
 
-        f = Fitness(ind)
+        f = Fitness(individual=ind, trajectories=trajectories)
         
         fitness.append(f)
 

@@ -9,6 +9,19 @@ class Movelet:
         self.start = start
         self.size = size 
 
+    def getPoints(self): 
+
+        sObject = slice(self.start, self.start + self.size)
+
+        points = self.trajectory.points[sObject]
+
+        ret = []
+
+        for p in points:
+            ret.append(p.getPosition())
+
+        return ret
+
     def mutate(self): 
         # pode mutar o tamanho do movelet e o ponto de inicio
         mutateOptions = [
