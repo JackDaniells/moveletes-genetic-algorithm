@@ -1,8 +1,8 @@
-import Population, Trajectory, GeneticAlgorithm
+from src import Population, Trajectory, GeneticAlgorithm
 
 import datetime
 
-INDIVIDUAL_SIZE = 2
+INDIVIDUAL_SIZE = 10
 POPULATION_SIZE = 10
 ELITE_SIZE = 10
 MUTATION_RATE = 0.01

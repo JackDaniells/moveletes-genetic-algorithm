@@ -1,5 +1,5 @@
 
-import Population
+from src import Population
 
 import random
 

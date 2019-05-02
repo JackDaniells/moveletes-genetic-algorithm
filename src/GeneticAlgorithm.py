@@ -1,5 +1,7 @@
 
-import MatingPool, Fitness, datetime
+from src import MatingPool, Fitness
+
+import datetime
 
 # roda o AG
 def run(population, eliteSize, mutationRate, generations, trajectories):

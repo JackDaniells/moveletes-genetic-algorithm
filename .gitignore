@@ -4,6 +4,8 @@ src/__pycache__/
 *.py[cod]
 *$py.class
 
+virtualenv/
+
 *.pyc
 
 # C extensions

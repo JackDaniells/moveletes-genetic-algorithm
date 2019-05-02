@@ -104,7 +104,7 @@ def readFolders ():
 
         dataset = getDataset(d)
 
-        filePath = "../datasets/" + experimental + "/" + d + '/train'
+        filePath = "./datasets/" + experimental + "/" + d + '/train'
 
         t = readFiles(filePath=filePath, dataset=dataset)
 
