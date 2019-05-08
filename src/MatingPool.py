@@ -6,16 +6,20 @@ import random
 #TODO: revisar
 def breedIndividual(parent1, parent2):
 
-    ind1 = []
-    ind2 = []
+    ind1 = {
+        'movelets': [],
+        'data': []
+    }
 
-    # print("FATHER ONE")
-    # for i in parent1.movelets: 
-    #     print(i)
+    ind2 = {
+        'movelets': [],
+        'data': []
+    }
 
-    # print("FATHER TWO")
-    # for i in parent2.movelets: 
-    #     print(i)
+    for j in range(0, len(parent2.dataMatrix['classes'])):
+
+        ind1['data'].append([])
+        ind2['data'].append([])
 
     #  define o ponto de corte
     splitPoint = random.randrange(parent1.size() - 1)
@@ -25,25 +29,34 @@ def breedIndividual(parent1, parent2):
 
         if i < splitPoint:
 
-            ind1.append(parent1.movelets[i])
-            ind2.append(parent2.movelets[i])
+            ind1['movelets'].append(parent1.movelets[i])
+            ind2['movelets'].append(parent2.movelets[i])
+
+            for j in range(0, len(parent2.dataMatrix['classes'])):
+
+                ind1['data'][j].append(parent1.dataMatrix['data'][j][i])
+                ind2['data'][j].append(parent2.dataMatrix['data'][j][i])
 
         else:
 
-            ind1.append(parent2.movelets[i])
-            ind2.append(parent1.movelets[i])
+            ind1['movelets'].append(parent2.movelets[i])
+            ind2['movelets'].append(parent1.movelets[i])
+
+            for j in range(0, len(parent2.dataMatrix['classes'])):
+                ind1['data'][j].append(parent2.dataMatrix['data'][j][i])
+                ind2['data'][j].append(parent1.dataMatrix['data'][j][i])
 
 
-    # print("CHILDREN ONE")
-    # for i in ind1: 
-    #     print(i)
+    parent1.movelets = ind1['movelets']
+    parent1.dataMatrix['data'] = ind1['data']
 
-    # print("CHILDREN TWO")
-    # for i in ind2: 
-    #     print(i)
+    parent2.movelets = ind2['movelets']
+    parent2.dataMatrix['data'] = ind2['data']
 
-    return Population.Individual(ind1), Population.Individual(ind2)
+    # print(parent1.dataMatrix)
 
+    # return Population.Individual(ind1), Population.Individual(ind2)
+    return parent1, parent2
 
 
 def breedPopulation(matingpool):
@@ -72,6 +85,9 @@ def mutateIndividual(individual, mutationRate):
         if(random.random() < mutationRate):
             
             swapped.mutate()
+
+            #  zera o score do individuo para recalcular a matriz de distancias
+            individual.cleanScore()
 
     return individual
 

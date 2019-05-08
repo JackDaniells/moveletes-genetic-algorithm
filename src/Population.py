@@ -7,7 +7,7 @@ class Movelet:
     def __init__(self, trajectory, start, size):
         self.trajectory = trajectory
         self.start = start
-        self.size = size 
+        self.size = size
 
     def getPoints(self): 
 
@@ -55,10 +55,21 @@ class Individual:
     def __init__(self, movelets):
 
         self.movelets = movelets
+        
+        self.cleanScore()
 
     def size(self):
 
         return len(self.movelets)
+
+    def cleanScore(self):
+       
+        self.score = 0
+
+        self.dataMatrix = {
+            'data': [],
+            'classes': []
+        }
 
 
 def create(trajetories, individualSize, populationSize):

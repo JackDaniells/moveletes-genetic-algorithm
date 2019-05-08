@@ -1,33 +1,27 @@
 
-import operator, random, datetime
+import operator, random, datetime, pandas, numpy
 
 from src import Classification
 
 
-class Fitness:
-    def __init__(self, individual, trajectories):
-        self.individual = individual
-        self.trajectories = trajectories
-        self.fitness = 0
-        self.rank()
     
-    def rank(self):
+def rankIndividual(individual, trajectories):
 
 
-        # print("[" + str(datetime.datetime.now()) + "] " + "Calculating Individual Fitness...")
-       
-        distanceMatix = Classification.calculateDistanceMatrix(movelets=self.individual.movelets, trajectories=self.trajectories)
+    # print("[" + str(datetime.datetime.now()) + "] " + "Calculating Individual Fitness...")
+    
+    distanceMatix = Classification.calculateDistanceMatrix(individual=individual, trajectories=trajectories)
 
-        score = Classification.calculateScore(distanceMatix)
+    individual.score = Classification.calculateScore(distanceMatix)
 
-        # print("[" + str(datetime.datetime.now()) + "] " + "Done!")
-        # usar o dtw pra calcular distancia de cada movelet pra cada trajetoria e depois jogar isso no classificador (Naive Bayes)
+    # print("[" + str(datetime.datetime.now()) + "] " + "Done!")
+    # usar o dtw pra calcular distancia de cada movelet pra cada trajetoria e depois jogar isso no classificador (Naive Bayes)
 
-        # salvar o dataset e fazer crossover dele tambem na reprodução pra nao precisar calcular tudo de novo
+    # salvar o dataset e fazer crossover dele tambem na reprodução pra nao precisar calcular tudo de novo
 
-        print(score)
+    print("[" + str(datetime.datetime.now()) + "] " + str(individual.score))
 
-        return score
+    return individual
     
 
 def rankPopulation(population, trajectories):
@@ -36,21 +30,37 @@ def rankPopulation(population, trajectories):
     
     for ind in population:
 
-        f = Fitness(individual=ind, trajectories=trajectories)
+        ftnss = rankIndividual(individual=ind, trajectories=trajectories)
         
-        fitness.append(f)
+        fitness.append(ftnss)
 
-    return sorted(fitness, key = operator.attrgetter('fitness'), reverse = True)
-
+    return sorted(fitness, key = operator.attrgetter('score'), reverse = True)
 
 
 def selection(popRanked, eliteSize):
 
     selectionResults = []
 
+
+    # maxSum = sum(popRanked.score)
+    
     for i in range(0, eliteSize):
+        selectionResults.append(popRanked[i])
 
-        selectionResults.append(popRanked[i].individual)
+    # for i in range(0, len(popRanked) - eliteSize):
 
+    #     pick = 100 * random.random()
+        
+    #     for i in range(0, len(popRanked)):
+        
+    #         if pick >= maxSum:
+        
+    #             selectionResults.append(popRanked[i])
+        
+    #             break
+    
     return selectionResults
+
+
+
    

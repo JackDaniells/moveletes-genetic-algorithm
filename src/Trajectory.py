@@ -81,34 +81,30 @@ def getDataset(d):
     }[d]
 
 
-def read():
-    return readFolders()
 
-# TODO: melhorar
 # le os arquivos das pastas e retorna as trajetorias 
-def readFolders (): 
+def readDataset (datasetPosition): 
 
     foldersName = [
         '1_patel_hurricane_2vs3',
         '2_patel_hurricane_1vs4',
-        # '3_patel_hurricane_0vs45',
-        # '4_patel_animals',
-        # '5_patel_vehicle',
+        '3_patel_hurricane_0vs45',
+        '4_patel_animals',
+        '5_patel_vehicle',
     ]
 
     experimental = "E1"
 
     trajectories = []
 
-    for d in foldersName:
 
-        dataset = getDataset(d)
+    dataset = getDataset(foldersName[datasetPosition])
 
-        filePath = "./datasets/" + experimental + "/" + d + '/train'
+    filePath = "./datasets/" + experimental + "/" + foldersName[datasetPosition] + '/train'
 
-        t = readFiles(filePath=filePath, dataset=dataset)
+    t = readFiles(filePath=filePath, dataset=dataset)
 
-        trajectories.extend(t)
+    trajectories.extend(t)
 
     return trajectories
 

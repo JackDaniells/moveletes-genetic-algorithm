@@ -1,0 +1,14 @@
+
+
+DUVIDAS 02/05
+
+- se a classe da trajetoria e do movelet forem iguais distancia = 0 ?
+- manter cross-validation? (elementos podem ser pequenos)
+- tempo de classificação (Lerdo pra porra)
+
+- 90 treino 45 teste - hurricane_1_3
+2/3 - 1/3
+
+manter a proporção te % por classe
+
+- mellhorar o algoritmo de crossover

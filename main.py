@@ -6,7 +6,7 @@ INDIVIDUAL_SIZE = 10
 POPULATION_SIZE = 10
 ELITE_SIZE = 10
 MUTATION_RATE = 0.01
-GENERATIONS = 10
+GENERATIONS = 100
 MOVELET_MAX_SIZE = 10
 
 # TODO: criar um parametro com o tamanho maximo do movelet
@@ -18,7 +18,10 @@ print("[" + str(datetime.datetime.now()) + "] " + "Program started!")
 #le as trajetorias
 print("[" + str(datetime.datetime.now()) + "] " + "Reading files...")
 
-trajectories = Trajectory.read()
+trajectories = Trajectory.readDataset(0)
+
+
+
 
 print("[" + str(datetime.datetime.now()) + "] " + "Trajectories found: " + str(len(trajectories)))
 
