@@ -1,5 +1,5 @@
 
-import random
+import random, uuid
 
 # classe movelet
 class Movelet:
@@ -8,6 +8,7 @@ class Movelet:
         self.trajectory = trajectory
         self.start = start
         self.size = size
+        # self.distances = []
 
     def getPoints(self): 
 
@@ -54,6 +55,8 @@ class Individual:
 
     def __init__(self, movelets):
 
+        self.id = uuid.uuid4()
+
         self.movelets = movelets
         
         self.cleanScore()
@@ -61,6 +64,10 @@ class Individual:
     def size(self):
 
         return len(self.movelets)
+
+    def getValues(self):
+        
+        return [self.id, self.score]
 
     def cleanScore(self):
        

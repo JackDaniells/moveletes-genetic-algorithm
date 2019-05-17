@@ -63,7 +63,7 @@ def calculateDistanceMatrix(individual, trajectories):
 
 def calculateScore(dataMatrix):
     
-    CROSS_VALIDATION_FOLDS = 2
+    CROSS_VALIDATION_FOLDS = 10
 
     naiveBayes = GaussianNB()
     

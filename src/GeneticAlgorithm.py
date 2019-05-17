@@ -18,6 +18,21 @@ def run(population, eliteSize, mutationRate, generations, trajectories):
 
     print('')
 
+# def runPlot(population, popSize, eliteSize, mutationRate, generations):
+    
+#     progress = []
+    
+#     for i in range(0, generations):
+        
+#         print("[" + str(datetime.datetime.now()) + "] " + "Generation " + str(i))
+
+#         gen = nextGeneration(currentGen=gen, eliteSize=eliteSize, mutationRate=mutationRate, trajectories=trajectories)
+    
+#     plt.plot(progress)
+#     plt.ylabel('Fitness')
+#     plt.xlabel('Generation')
+#     plt.show()
+
 
 # crias as novas gerações da população
 def nextGeneration(currentGen, eliteSize, mutationRate, trajectories):

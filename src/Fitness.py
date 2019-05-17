@@ -41,11 +41,56 @@ def selection(popRanked, eliteSize):
 
     selectionResults = []
 
+    popConverted = []
+
+    for individual in popRanked:
+        
+        popConverted.append(individual.getValues())
+
+
+
+    df = pandas.DataFrame(numpy.array(popConverted), columns=["Index","Fitness"])
+    df['cum_sum'] = df.Fitness.cumsum()
+    df['cum_perc'] = df.cum_sum / df.Fitness.sum()
+
+
+    # elitism
+    for i in range(0, eliteSize):
+
+        selectionResults.append(popConverted[i][0])
+
+    # roullete whell
+    for i in range(0, len(popConverted) - eliteSize):
+
+        pick = random.random()
+
+        for i in range(0, len(popConverted)):
+
+            if pick <= df.iat[i,3]:
+
+                selectionResults.append(popConverted[i][0])
+                break
+
+
+   
+    for i in range(0, len(selectionResults)):
+        
+        # print(selectionResults[i])
+        # print(i)
+        
+        for individual in popRanked:
+
+            if individual.id == selectionResults[i]:
+
+                selectionResults[i] = individual
+                break
+
+
 
     # maxSum = sum(popRanked.score)
     
-    for i in range(0, eliteSize):
-        selectionResults.append(popRanked[i])
+    # for i in range(0, eliteSize):
+    #     selectionResults.append(popRanked[i])
 
     # for i in range(0, len(popRanked) - eliteSize):
 
