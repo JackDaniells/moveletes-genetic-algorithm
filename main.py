@@ -2,9 +2,16 @@ from src import Population, Trajectory, GeneticAlgorithm
 
 import datetime
 
-INDIVIDUAL_SIZE = 10
-POPULATION_SIZE = 10
-ELITE_SIZE = 3
+# INDIVIDUAL_SIZE = 20
+# POPULATION_SIZE = 100
+# ELITE_SIZE = 10
+# MUTATION_RATE = 0.01
+# GENERATIONS = 100
+# MOVELET_MAX_SIZE = 10
+
+INDIVIDUAL_SIZE = 5
+POPULATION_SIZE = 100
+ELITE_SIZE = 1
 MUTATION_RATE = 0.01
 GENERATIONS = 100
 MOVELET_MAX_SIZE = 10
@@ -41,7 +48,9 @@ print("[" + str(datetime.datetime.now()) + "] " + "Population size: " + str(len(
 print("[" + str(datetime.datetime.now()) + "] " + "Running Genetic Algorithm...")
 print("[" + str(datetime.datetime.now()) + "] " + "Generations: " + str(GENERATIONS))
 
-GeneticAlgorithm.run(population=pop, eliteSize=ELITE_SIZE, mutationRate=MUTATION_RATE, generations=GENERATIONS, trajectories=trajectories)
+# GeneticAlgorithm.run(population=pop, eliteSize=ELITE_SIZE, mutationRate=MUTATION_RATE, generations=GENERATIONS, trajectories=trajectories)
+
+GeneticAlgorithm.runPlot(population=pop, eliteSize=ELITE_SIZE, mutationRate=MUTATION_RATE, generations=GENERATIONS, trajectories=trajectories)
 
 print("[" + str(datetime.datetime.now()) + "] " + "Program completed!")
 

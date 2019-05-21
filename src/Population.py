@@ -8,7 +8,7 @@ class Movelet:
         self.trajectory = trajectory
         self.start = start
         self.size = size
-        # self.distances = []
+        self.distances = []
 
     def getPoints(self): 
 
@@ -29,6 +29,10 @@ class Movelet:
             'size',
             'start'
         ]
+
+        # limpa o array de distancias
+        self.distances = []
+
 
         mutationType = mutateOptions[random.randrange(len(mutateOptions))]
 
@@ -73,11 +77,7 @@ class Individual:
        
         self.score = 0
 
-        self.dataMatrix = {
-            'data': [],
-            'classes': []
-        }
-
+        
 
 def create(trajetories, individualSize, populationSize):
 

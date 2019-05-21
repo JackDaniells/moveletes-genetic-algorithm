@@ -8,13 +8,17 @@ from sklearn.naive_bayes import GaussianNB
 from scipy.spatial.distance import euclidean
 from sklearn.model_selection import GridSearchCV, StratifiedKFold, train_test_split
 
+DECIMAL_FIELDS = 4
+
     
 
-# calcula a distancia com fastdtw
 def calculateDistanceMatrix(individual, trajectories):
 
-    if individual.score != 0:
-        return individual.dataMatrix
+
+    dataMatrix = {
+        'data': [],
+        'classes': []
+    }
 
     dataMatrixCol = []
 
@@ -25,6 +29,7 @@ def calculateDistanceMatrix(individual, trajectories):
 
         t1 = trajectory.getPoints()
 
+    
         dataMatrixCol = []
     
 
@@ -33,37 +38,45 @@ def calculateDistanceMatrix(individual, trajectories):
 
             movelet = individual.movelets[j]
 
-            t2 = movelet.getPoints()
-
             distance = 0
-            
-            # só calcula se o movelet nao for da trajetoria em questao, senao distancia = 0
-            if movelet.trajectory.fileName != trajectory.fileName:
-                start = timeit.default_timer()
 
-                distance, path = fastdtw(t1, t2, dist=euclidean)
+            # verifica se a distancia ja esta calculada
+            if len(movelet.distances) == len(trajectories): 
 
-                end = timeit.default_timer()
+                distance = movelet.distances[i]
 
-            # d = d[dtw] / |movelet|
-            # distance = round(float(distance / len(t1)), 2)
+            else:
 
-            distance = round(float(distance), 2)
+                t2 = movelet.getPoints()
+
+                
+                # só calcula se o movelet nao for da trajetoria em questao, senao distancia = 0
+                if movelet.trajectory.fileName != trajectory.fileName:
+                    start = timeit.default_timer()
+
+                    distance, path = fastdtw(t1, t2, dist=euclidean)
+
+                    end = timeit.default_timer()
+
+                # d = d[dtw] / |movelet|
+                # distance = round(float(distance / len(t1)), 2)
+
+                distance = round(float(distance), DECIMAL_FIELDS)
+
+                movelet.distances.append(distance)
 
             dataMatrixCol.append(distance)
 
-        individual.dataMatrix['data'].append(dataMatrixCol)
-        individual.dataMatrix['classes'].append(trajectory.group)
+        dataMatrix['data'].append(dataMatrixCol)
+        dataMatrix['classes'].append(trajectory.group)
 
     # print(dataMatrix)
 
-    return individual.dataMatrix
-
-
+    return dataMatrix
 
 def calculateScore(dataMatrix):
     
-    CROSS_VALIDATION_FOLDS = 10
+    CROSS_VALIDATION_FOLDS = 2
 
     naiveBayes = GaussianNB()
     
@@ -78,6 +91,6 @@ def calculateScore(dataMatrix):
 
     result = gs.cv_results_['mean_test_score'][0]
 
-    return round(result, 2)
+    return round(result, DECIMAL_FIELDS)
 
 

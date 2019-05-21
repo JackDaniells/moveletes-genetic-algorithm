@@ -12,6 +12,8 @@ def rankIndividual(individual, trajectories):
     
     distanceMatix = Classification.calculateDistanceMatrix(individual=individual, trajectories=trajectories)
 
+    # print(distanceMatix)
+
     individual.score = Classification.calculateScore(distanceMatix)
 
     # print("[" + str(datetime.datetime.now()) + "] " + "Done!")

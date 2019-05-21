@@ -1,6 +1,8 @@
 
 from src import MatingPool, Fitness
 
+import matplotlib.pyplot as plt
+
 import datetime
 
 # roda o AG
@@ -18,20 +20,31 @@ def run(population, eliteSize, mutationRate, generations, trajectories):
 
     print('')
 
-# def runPlot(population, popSize, eliteSize, mutationRate, generations):
+def runPlot(population, eliteSize, mutationRate, generations, trajectories):
     
-#     progress = []
-    
-#     for i in range(0, generations):
-        
-#         print("[" + str(datetime.datetime.now()) + "] " + "Generation " + str(i))
+    progress = []
 
-#         gen = nextGeneration(currentGen=gen, eliteSize=eliteSize, mutationRate=mutationRate, trajectories=trajectories)
+    gen = population
+
     
-#     plt.plot(progress)
-#     plt.ylabel('Fitness')
-#     plt.xlabel('Generation')
-#     plt.show()
+    for i in range(0, generations):
+        
+        print("[" + str(datetime.datetime.now()) + "] " + "Generation " + str(i))
+
+        gen = nextGeneration(currentGen=gen, eliteSize=eliteSize, mutationRate=mutationRate, trajectories=trajectories)
+
+        progressCol = []
+
+        for i in gen:
+            progressCol.append(i.score)
+        
+        progress.append(progressCol)
+
+    
+    plt.plot(progress)
+    plt.ylabel('Fitness')
+    plt.xlabel('Generation')
+    plt.show()
 
 
 # crias as novas gerações da população
@@ -44,7 +57,7 @@ def nextGeneration(currentGen, eliteSize, mutationRate, trajectories):
     selectionResults = Fitness.selection(popRanked=popRanked, eliteSize=eliteSize)
 
     # faz o crossover entre os individuos
-    children = MatingPool.breedPopulation(matingpool=selectionResults)
+    children = MatingPool.breedPopulation(matingpool=selectionResults, eliteSize=eliteSize)
 
     # faz a mutação dos indivíduos
     nextGeneration = MatingPool.mutatePopulation(population=children, mutationRate=mutationRate)
