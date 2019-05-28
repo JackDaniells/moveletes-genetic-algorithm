@@ -137,7 +137,7 @@ def readFiles(filePath, dataset):
             i = i.replace('\n', '')
             s = i.split(',')
             xy = s[1].split(' ')
-            p = Point(time=s[0], x=xy[0], y=xy[1])
+            p = Point(time=float(s[0]), x=float(xy[0]), y=float(xy[1]))
 
             trajectory.addPoint(p)
 

@@ -6,20 +6,9 @@ import random
 #TODO: revisar
 # def breedIndividual(parent1, parent2):
 
-#     ind1 = {
-#         'movelets': [],
-#         'data': []
-#     }
+#     ind1 = []
 
-#     ind2 = {
-#         'movelets': [],
-#         'data': []
-#     }
-
-#     for j in range(0, len(parent2.dataMatrix['classes'])):
-
-#         ind1['data'].append([])
-#         ind2['data'].append([])
+#     ind2 = []
 
 #     #  define o ponto de corte
 #     splitPoint = random.randrange(parent1.size() - 1)
@@ -29,33 +18,16 @@ import random
 
 #         if i < splitPoint:
 
-#             ind1['movelets'].append(parent1.movelets[i])
-#             ind2['movelets'].append(parent2.movelets[i])
-
-#             for j in range(0, len(parent2.dataMatrix['classes'])):
-
-#                 ind1['data'][j].append(parent1.dataMatrix['data'][j][i])
-#                 ind2['data'][j].append(parent2.dataMatrix['data'][j][i])
+#             ind1.append(parent1.movelets[i])
+#             ind2.append(parent2.movelets[i])
 
 #         else:
 
-#             ind1['movelets'].append(parent2.movelets[i])
-#             ind2['movelets'].append(parent1.movelets[i])
-
-#             for j in range(0, len(parent2.dataMatrix['classes'])):
-#                 ind1['data'][j].append(parent2.dataMatrix['data'][j][i])
-#                 ind2['data'][j].append(parent1.dataMatrix['data'][j][i])
+#             ind1.append(parent2.movelets[i])
+#             ind2.append(parent1.movelets[i])
 
 
-#     parent1.movelets = ind1['movelets']
-#     parent1.dataMatrix['data'] = ind1['data']
-
-#     parent2.movelets = ind2['movelets']
-#     parent2.dataMatrix['data'] = ind2['data']
-
-#     # print(parent1.dataMatrix)
-
-#     # return Population.Individual(ind1), Population.Individual(ind2)
+#     return Population.Individual(ind1), Population.Individual(ind2)
 #     return parent1, parent2
 
 def breedIndividual(parent1, parent2):

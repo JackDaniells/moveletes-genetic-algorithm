@@ -12,3 +12,6 @@ DUVIDAS 02/05
 manter a proporção te % por classe
 
 - mellhorar o algoritmo de crossover
+
+
+- nao usar o dtw - comparar 

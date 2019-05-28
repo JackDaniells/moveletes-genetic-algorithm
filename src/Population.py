@@ -1,6 +1,9 @@
 
 import random, uuid
 
+MOVELET_MAX_SIZE = 15
+
+
 # classe movelet
 class Movelet:
 
@@ -41,6 +44,9 @@ class Movelet:
             if self.trajectory.size() - self.start > 2:
             
                 self.size = random.randrange(2, self.trajectory.size() - self.start)
+
+            if self.size> MOVELET_MAX_SIZE:
+                self.size = MOVELET_MAX_SIZE
 
 
         elif mutationType == 'start':
@@ -104,6 +110,9 @@ def create(trajetories, individualSize, populationSize):
             s = 2
             if  (t.size() - start) > 2:
                 s = random.randrange(2, t.size() - start)
+
+            if s > MOVELET_MAX_SIZE:
+                s = MOVELET_MAX_SIZE 
 
             # cria o movelet
             movelet = Movelet(trajectory=t, start=start, size=s)
