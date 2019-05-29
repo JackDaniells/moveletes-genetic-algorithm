@@ -26,6 +26,8 @@ class Movelet:
 
         return ret
 
+        
+
     def mutate(self): 
         # pode mutar o tamanho do movelet e o ponto de inicio
         mutateOptions = [
@@ -45,8 +47,8 @@ class Movelet:
             
                 self.size = random.randrange(2, self.trajectory.size() - self.start)
 
-            if self.size> MOVELET_MAX_SIZE:
-                self.size = MOVELET_MAX_SIZE
+            # if MOVELET_MAX_SIZE != 0 and self.size > MOVELET_MAX_SIZE:
+            #     self.size = MOVELET_MAX_SIZE
 
 
         elif mutationType == 'start':
@@ -71,13 +73,16 @@ class Individual:
         
         self.cleanScore()
 
+
     def size(self):
 
         return len(self.movelets)
 
+
     def getValues(self):
         
         return [self.id, self.score]
+
 
     def cleanScore(self):
        
@@ -111,14 +116,13 @@ def create(trajetories, individualSize, populationSize):
             if  (t.size() - start) > 2:
                 s = random.randrange(2, t.size() - start)
 
-            if s > MOVELET_MAX_SIZE:
-                s = MOVELET_MAX_SIZE 
+            # if s > MOVELET_MAX_SIZE:
+            #     s = MOVELET_MAX_SIZE 
 
             # cria o movelet
             movelet = Movelet(trajectory=t, start=start, size=s)
 
             movelets.append(movelet)
-
 
         ind = Individual(movelets=movelets)
         

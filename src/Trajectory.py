@@ -1,5 +1,5 @@
 
-import os, numpy
+import os
 
 
 #  classe ponto
@@ -97,6 +97,7 @@ def readDataset (datasetPosition):
 
     trajectories = []
 
+    # for datasetPosition in range(0, len(foldersName)):
 
     dataset = getDataset(foldersName[datasetPosition])
 

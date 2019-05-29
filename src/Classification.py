@@ -10,6 +10,9 @@ from sklearn.model_selection import GridSearchCV, StratifiedKFold, train_test_sp
 
 from sklearn.metrics import classification_report
 
+from sklearn import preprocessing
+
+
 DECIMAL_FIELDS = 5
 
     
@@ -53,35 +56,34 @@ def calculateDistanceMatrix(individual, trajectories):
 
                 
                 # só calcula se o movelet nao for da trajetoria em questao, senao distancia = 0
-                if movelet.trajectory.fileName != trajectory.fileName:
+                # if movelet.trajectory.fileName != trajectory.fileName:
 
-                    start = timeit.default_timer()
+                moveletsIteractions =  len(t2) - 1
 
-                    moveletsIteractions =  len(t2) - 1
+                trajectoryIteractions = len(t1) - moveletsIteractions
 
-                    trajectoryIteractions = len(t1) - moveletsIteractions
+                for t in range(0, trajectoryIteractions):
 
-                    for t in range(0, trajectoryIteractions):
+                    distanceCalculated = 0
 
-                        distanceCalculated = 0
+                    for m in range(0, moveletsIteractions):
 
-                        for m in range(0, moveletsIteractions):
+                        p = t + m
 
-                            p = t + m
-
-                            distanceCalculated += euclidean(t1[p], t2[m])
-                    
+                        distanceCalculated += euclidean(t1[p], t2[m])
+                        
+                
+                    if distanceCalculated > 0:
                         distanceCalculated = distanceCalculated / len(t2)
 
-                        if distanceCalculated < distance or distance == 0:
-                            distance = distanceCalculated
-
-                    end = timeit.default_timer()
+                    # se a distancia calculada for menor que zero ou for a primeira iteração 
+                    if distanceCalculated > distance or t == 0:
+                        distance = distanceCalculated
 
                 # d = d[dtw] / |movelet|
                 # distance = round(float(distance / len(t1)), 2)
 
-                distance = round(distance, DECIMAL_FIELDS)
+                # distance = round(distance, DECIMAL_FIELDS)
 
                 movelet.distances.append(distance)
 
@@ -94,77 +96,73 @@ def calculateDistanceMatrix(individual, trajectories):
 
     return dataMatrix
 
+
+
+
+
 def calculateScore(dataMatrix):
     
-    CROSS_VALIDATION_FOLDS = 10
+    CROSS_VALIDATION_FOLDS = 2
 
     naiveBayes = GaussianNB()
     
     # print(dataMatrix)
 
     # salva o csv dos arquivos
-    # dataToCSV = []
-    
-    # for i in range(0, len(dataMatrix['data'])):
-        
-    #     dataToCSV.append(dataMatrix['data'][i].copy())
 
-    #     dataToCSV[i].append(dataMatrix['classes'][i])
-    # # numpy.append(a, dataMatrix['classes'])
-
-    # a = numpy.asarray(dataToCSV)
-
-    # numpy.savetxt("run/"+ str(timeit.default_timer()) +".csv", a, delimiter=",", fmt='%s')
+    # X_train, X_test, y_train, y_test = train_test_split(
+    # dataMatrix['data'],  dataMatrix['classes'], test_size=0.4, random_state=0)
 
 
+    # normaliza e padroniza dos dados
 
+    x_data = preprocessing.normalize(dataMatrix['data'])
 
-    X_train, X_test, y_train, y_test = train_test_split(
-    dataMatrix['data'],  dataMatrix['classes'], test_size=0.3, random_state=0)
+    # x_data = preprocessing.KBinsDiscretizer(n_bins=50, encode='ordinal', strategy='uniform').fit(dataMatrix['data'])
 
+    # x_data = x_data.transform(dataMatrix['data'])
 
+    y_data = dataMatrix['classes']
+
+    # saveInCSV(x_data, y_data)
 
 
     # cross validation
     gs = GridSearchCV(naiveBayes, cv=CROSS_VALIDATION_FOLDS, param_grid={}, return_train_score=False, n_jobs=-1, iid=True) 
 
-    gs.fit(dataMatrix['data'], dataMatrix['classes'])
-
     # gs.fit(X_train, y_train)
 
-    # print("Best parameters set found on development set:")
-    # print()
-    # print(gs.best_params_)
-    # print()
-    # print("Grid scores on development set:")
-    # print()
-    # means = gs.cv_results_['mean_test_score']
-    # stds = gs.cv_results_['std_test_score']
-    # for mean, std, params in zip(means, stds, gs.cv_results_['params']):
-    #     print("%0.3f (+/-%0.03f) for %r"
-    #           % (mean, std * 2, params))
-    # print()
+    # print(gs.score(X_test, y_test))
 
-    # print("Detailed classification report:")
-    # print()
-    # print("The model is trained on the full development set.")
-    # print("The scores are computed on the full evaluation set.")
-    # print()
-    # y_true, y_pred = y_test, gs.predict(X_test)
-    # print(classification_report(y_true, y_pred))
-    # print()
-
-
-
-
-
-    # naiveBayes.fit(dataMatrix['data'], dataMatrix['classes'])
-    # print(naiveBayes.score(dataMatrix['data'], dataMatrix['classes']))
-    # print(gs.cv_results_)
-
+    gs.fit(x_data, y_data)
 
     result = gs.cv_results_['mean_test_score'][0]
 
     return round(result, DECIMAL_FIELDS)    
+
+
+
+
+
+
+
+def saveInCSV(x, y): 
+    
+    dataToCSV = []
+    
+    for i in range(0, len(x)):
+        
+        x_copy = numpy.array(x[i].copy())
+
+        x_copy = numpy.append(x_copy, y[i])
+
+
+        dataToCSV.append(x_copy)
+        # numpy.append(dataToCSV[i], y[i])
+    # numpy.append(a, dataMatrix['classes'])
+
+    a = numpy.asarray(dataToCSV)
+
+    numpy.savetxt(""+ str(timeit.default_timer()) +".csv", a, delimiter=",", fmt='%s')
 
 
