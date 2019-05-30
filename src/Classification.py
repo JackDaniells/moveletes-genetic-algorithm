@@ -77,7 +77,7 @@ def calculateDistanceMatrix(individual, trajectories):
                         distanceCalculated = distanceCalculated / len(t2)
 
                     # se a distancia calculada for menor que zero ou for a primeira iteração 
-                    if distanceCalculated > distance or t == 0:
+                    if distanceCalculated < distance or t == 0:
                         distance = distanceCalculated
 
                 # d = d[dtw] / |movelet|
@@ -86,6 +86,10 @@ def calculateDistanceMatrix(individual, trajectories):
                 # distance = round(distance, DECIMAL_FIELDS)
 
                 movelet.distances.append(distance)
+
+            # TODO: calcular o split point (?)
+
+
 
             dataMatrixCol.append(distance)
 
@@ -116,7 +120,8 @@ def calculateScore(dataMatrix):
 
     # normaliza e padroniza dos dados
 
-    x_data = preprocessing.normalize(dataMatrix['data'])
+    # x_data = preprocessing.normalize(dataMatrix['data'])
+    x_data = dataMatrix['data']
 
     # x_data = preprocessing.KBinsDiscretizer(n_bins=50, encode='ordinal', strategy='uniform').fit(dataMatrix['data'])
 
@@ -139,11 +144,6 @@ def calculateScore(dataMatrix):
     result = gs.cv_results_['mean_test_score'][0]
 
     return round(result, DECIMAL_FIELDS)    
-
-
-
-
-
 
 
 def saveInCSV(x, y): 

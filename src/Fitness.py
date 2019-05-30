@@ -45,11 +45,8 @@ def selection(popRanked, eliteSize):
 
     popConverted = []
 
-    for individual in popRanked:
-        
+    for individual in popRanked:        
         popConverted.append(individual.getValues())
-
-
 
     df = pandas.DataFrame(numpy.array(popConverted), columns=["Index","Fitness"])
     df['cum_sum'] = df.Fitness.cumsum()

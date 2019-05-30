@@ -53,7 +53,7 @@ def nextGeneration(currentGen, eliteSize, mutationRate, trajectories):
     # rankeia os individuos
     popRanked = Fitness.rankPopulation(population=currentGen, trajectories=trajectories)
 
-    # seleciona os melhores para  reprodução
+    # seleciona os melhores para reprodução
     selectionResults = Fitness.selection(popRanked=popRanked, eliteSize=eliteSize)
 
     # faz o crossover entre os individuos

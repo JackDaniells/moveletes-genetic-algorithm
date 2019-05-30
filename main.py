@@ -9,11 +9,11 @@ import datetime
 # GENERATIONS = 100
 # MOVELET_MAX_SIZE = 10
 
-INDIVIDUAL_SIZE = 10
-POPULATION_SIZE = 20
-ELITE_SIZE = 2
-MUTATION_RATE = 0
-GENERATIONS = 50
+INDIVIDUAL_SIZE = 100
+POPULATION_SIZE = 200
+ELITE_SIZE = 20
+MUTATION_RATE = 0.001
+GENERATIONS = 500
 
 # TODO: criar um parametro com o tamanho maximo do movelet
 
@@ -24,7 +24,7 @@ print("[" + str(datetime.datetime.now()) + "] " + "Program started!")
 #le as trajetorias
 print("[" + str(datetime.datetime.now()) + "] " + "Reading files...")
 
-trajectories = Trajectory.readDataset(3)
+trajectories = Trajectory.readDataset(1)
 
 print("[" + str(datetime.datetime.now()) + "] " + "Trajectories found: " + str(len(trajectories)))
 
