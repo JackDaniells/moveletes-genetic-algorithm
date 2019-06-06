@@ -1,4 +1,4 @@
-@RELATION dataset
+@RELATION mortes-suicidio
  
  
 @ATTRIBUTE m1 REAL

@@ -1,6 +1,8 @@
 
 from src import Population
 
+import copy
+
 import random
 
 #TODO: revisar
@@ -47,6 +49,9 @@ def breedIndividual(parent1, parent2):
     childP2 = [item for item in parent2.movelets if item not in childP1]
 
     child = childP1 + childP2
+
+    del childP1, childP2
+
     return  Population.Individual(child)
 
 
@@ -57,7 +62,7 @@ def breedPopulation(matingpool, eliteSize):
     pool = random.sample(matingpool, len(matingpool))
 
     for i in range(0,eliteSize):
-        children.append(matingpool[i])
+        children.append(copy.deepcopy(matingpool[i]))
     
     for i in range(0, length):
         child = breedIndividual(pool[i], pool[len(matingpool)-i-1])

@@ -33,12 +33,13 @@ def runPlot(population, eliteSize, mutationRate, generations, trajectories):
 
         gen = nextGeneration(currentGen=gen, eliteSize=eliteSize, mutationRate=mutationRate, trajectories=trajectories)
 
-        progressCol = []
 
+        betterScore = 0
         for i in gen:
-            progressCol.append(i.score)
+            if i.score > betterScore:
+                betterScore = i.score
         
-        progress.append(progressCol)
+        progress.append(betterScore)
 
     
     plt.plot(progress)
@@ -52,6 +53,7 @@ def nextGeneration(currentGen, eliteSize, mutationRate, trajectories):
 
     # rankeia os individuos
     popRanked = Fitness.rankPopulation(population=currentGen, trajectories=trajectories)
+    print(popRanked[0].score)
 
     # seleciona os melhores para reprodução
     selectionResults = Fitness.selection(popRanked=popRanked, eliteSize=eliteSize)

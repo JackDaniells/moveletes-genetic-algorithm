@@ -55,7 +55,7 @@ def selection(popRanked, eliteSize):
 
     # elitism
     for i in range(0, eliteSize):
-
+        
         selectionResults.append(popConverted[i][0])
 
     # roullete whell
