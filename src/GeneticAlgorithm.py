@@ -5,6 +5,10 @@ import matplotlib.pyplot as plt
 
 import datetime
 
+import gc
+
+import tracemalloc
+
 # roda o AG
 def run(population, eliteSize, mutationRate, generations, trajectories):
 
@@ -21,11 +25,12 @@ def run(population, eliteSize, mutationRate, generations, trajectories):
     print('')
 
 def runPlot(population, eliteSize, mutationRate, generations, trajectories):
+
+    tracemalloc.start()
     
     progress = []
 
     gen = population
-
     
     for i in range(0, generations):
         
@@ -40,6 +45,17 @@ def runPlot(population, eliteSize, mutationRate, generations, trajectories):
                 betterScore = i.score
         
         progress.append(betterScore)
+
+        # força o garbagge collector a rodar
+        gc.collect()
+
+        
+        snapshot = tracemalloc.take_snapshot()
+        top_stats = snapshot.statistics('lineno')
+
+        print("[ Top 10 ]")
+        for stat in top_stats[:10]:
+            print(stat)
 
     
     plt.plot(progress)
@@ -58,8 +74,14 @@ def nextGeneration(currentGen, eliteSize, mutationRate, trajectories):
     # seleciona os melhores para reprodução
     selectionResults = Fitness.selection(popRanked=popRanked, eliteSize=eliteSize)
 
+    # limpa a variavel da memoria
+    del popRanked
+
     # faz o crossover entre os individuos
     children = MatingPool.breedPopulation(matingpool=selectionResults, eliteSize=eliteSize)
+
+    # limpa a variavel da memoria
+    del selectionResults
 
     # faz a mutação dos indivíduos
     nextGeneration = MatingPool.mutatePopulation(population=children, mutationRate=mutationRate)

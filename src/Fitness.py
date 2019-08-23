@@ -102,6 +102,8 @@ def selection(popRanked, eliteSize):
     #             selectionResults.append(popRanked[i])
         
     #             break
+
+    del popConverted
     
     return selectionResults
 

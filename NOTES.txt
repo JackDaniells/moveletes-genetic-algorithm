@@ -1,6 +1,24 @@
 
 
-DUVIDAS 02/05
+/*************************************************************/
+
+01/08
+
+IDEIAS
+
+
+PROBLEMAS
+- tempo de execução do algoritmo - [https://www.fugue.co/blog/diagnosing-and-fixing-memory-leaks-in-python.html]
+[ok] - - ver limitação de memória na virtualenv
+[ok] - - deletar o que nao estiver sendo usado da memoria
+[ok] - - forçar garbage collector  
+
+FUNDAMENTACAO TEORICA
+- fazer as melhorias sugeridas pela banca na parte escrita
+
+
+/*************************************************************/
+02/05
 
 - se a classe da trajetoria e do movelet forem iguais distancia = 0 ?
 - manter cross-validation? (elementos podem ser pequenos)
@@ -12,6 +30,9 @@ DUVIDAS 02/05
 manter a proporção te % por classe
 
 - mellhorar o algoritmo de crossover
+/*************************************************************/
 
 
-- nao usar o dtw - comparar 
+
+
+
