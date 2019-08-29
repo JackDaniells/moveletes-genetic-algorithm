@@ -7,7 +7,7 @@ import datetime
 
 import gc
 
-import tracemalloc
+# import tracemalloc
 
 # roda o AG
 def run(population, eliteSize, mutationRate, generations, trajectories):
@@ -26,7 +26,7 @@ def run(population, eliteSize, mutationRate, generations, trajectories):
 
 def runPlot(population, eliteSize, mutationRate, generations, trajectories):
 
-    tracemalloc.start()
+    # tracemalloc.start()
     
     progress = []
 
@@ -50,12 +50,12 @@ def runPlot(population, eliteSize, mutationRate, generations, trajectories):
         gc.collect()
 
         
-        snapshot = tracemalloc.take_snapshot()
-        top_stats = snapshot.statistics('lineno')
+        # snapshot = tracemalloc.take_snapshot()
+        # top_stats = snapshot.statistics('lineno')
 
-        print("[ Top 10 ]")
-        for stat in top_stats[:10]:
-            print(stat)
+        # print("[ Top 10 ]")
+        # for stat in top_stats[:10]:
+        #     print(stat)
 
     
     plt.plot(progress)
