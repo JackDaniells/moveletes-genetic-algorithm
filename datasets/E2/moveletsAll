@@ -1,0 +1,37 @@
+#!/bin/bash
+D1="1_patel_hurricane_2vs3/"
+D2="2_patel_hurricane_1vs4/"
+D3="3_patel_hurricane_0vs45/"
+D4="4_patel_animals/"
+D5="5_patel_vehicle/"
+
+DESCRIPTION="descriptions/spatialMovelets.json"
+NTHREADS=8
+
+PARAMS="$NTHREADS $DESCRIPTION"
+PARAMSD5="2 $DESCRIPTION" 
+
+# Feature Extraction
+#bash movelets $D1 $PARAMS
+
+#bash movelets $D2 $PARAMS
+
+#bash movelets $D3 $PARAMS
+
+#bash movelets $D4 $PARAMS
+
+# This dataset requires around 15 GB per thread
+#bash movelets $D5 $PARAMSD5
+
+BUILD_MODEL="../../../programs/bmHO.r"
+RESULT_PATH="../../../results/ACMSAC2018/E2/"
+
+Rscript $BUILD_MODEL $RESULT_PATH$D1"Movelets/spatialMovelets/"
+
+Rscript $BUILD_MODEL $RESULT_PATH$D2"Movelets/spatialMovelets/"
+
+Rscript $BUILD_MODEL $RESULT_PATH$D3"Movelets/spatialMovelets/"
+
+Rscript $BUILD_MODEL $RESULT_PATH$D4"Movelets/spatialMovelets/"
+
+Rscript $BUILD_MODEL $RESULT_PATH$D5"Movelets/spatialMovelets/"

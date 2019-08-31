@@ -1,53 +1,20 @@
-from src import Population, Trajectory, GeneticAlgorithm
-
-import datetime
-
-# INDIVIDUAL_SIZE = 10
-# POPULATION_SIZE = 20
-# ELITE_SIZE = 2
-# MUTATION_RATE = 0.001
-# GENERATIONS = 100
-
-INDIVIDUAL_SIZE = 100
-POPULATION_SIZE = 200
-ELITE_SIZE = 20
-MUTATION_RATE = 0.001
-GENERATIONS = 500
-
-# TODO: criar um parametro com o tamanho maximo do movelet
 
 
-print("[" + str(datetime.datetime.now()) + "] " + "Program started!")
+import engine
 
 
-#le as trajetorias
-print("[" + str(datetime.datetime.now()) + "] " + "Reading files...")
+# 0 = 1_patel_hurricane_2vs3
+# 1 = 2_patel_hurricane_1vs4
+# 2 = 3_patel_hurricane_0vs45
+# 3 = 4_patel_animals
+# 4 = 5_patel_vehicle
 
-trajectories = Trajectory.readDataset(3)
+engine.run('1_patel_hurricane_2vs3')
 
-print("[" + str(datetime.datetime.now()) + "] " + "Trajectories found: " + str(len(trajectories)))
+engine.run('4_patel_animals')
 
-# for t in trajectories:
-#     print(t)
+engine.run('3_patel_hurricane_0vs45')
 
-
-#cria os individuos
-print("[" + str(datetime.datetime.now()) + "] " + "Creating population...")
-
-pop = Population.create(trajetories=trajectories, individualSize=INDIVIDUAL_SIZE, populationSize=POPULATION_SIZE)
-
-print("[" + str(datetime.datetime.now()) + "] " + "Population size: " + str(len(pop)))
-
-
-#instancia o algoritmo genetico
-print("[" + str(datetime.datetime.now()) + "] " + "Running Genetic Algorithm...")
-print("[" + str(datetime.datetime.now()) + "] " + "Generations: " + str(GENERATIONS))
-
-# GeneticAlgorithm.run(population=pop, eliteSize=ELITE_SIZE, mutationRate=MUTATION_RATE, generations=GENERATIONS, trajectories=trajectories)
-
-GeneticAlgorithm.runPlot(population=pop, eliteSize=ELITE_SIZE, mutationRate=MUTATION_RATE, generations=GENERATIONS, trajectories=trajectories)
-
-print("[" + str(datetime.datetime.now()) + "] " + "Program completed!")
 
 
 

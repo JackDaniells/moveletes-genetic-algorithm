@@ -89,8 +89,6 @@ def calculateDistanceMatrix(individual, trajectories):
 
             # TODO: calcular o split point (?)
 
-
-
             dataMatrixCol.append(distance)
 
         dataMatrix['data'].append(dataMatrixCol)
@@ -114,13 +112,10 @@ def calculateScore(dataMatrix):
 
     # salva o csv dos arquivos
 
-    # X_train, X_test, y_train, y_test = train_test_split(
-    # dataMatrix['data'],  dataMatrix['classes'], test_size=0.4, random_state=0)
-
-
     # normaliza e padroniza dos dados
 
     # x_data = preprocessing.normalize(dataMatrix['data'])
+
     x_data = dataMatrix['data']
 
     # x_data = preprocessing.KBinsDiscretizer(n_bins=50, encode='ordinal', strategy='uniform').fit(dataMatrix['data'])
@@ -133,15 +128,21 @@ def calculateScore(dataMatrix):
 
 
     # cross validation
-    gs = GridSearchCV(naiveBayes, cv=CROSS_VALIDATION_FOLDS, param_grid={}, return_train_score=False, n_jobs=-1, iid=True) 
+    # gs = GridSearchCV(naiveBayes, cv=CROSS_VALIDATION_FOLDS, param_grid={}, return_train_score=False, n_jobs=-1, iid=True) 
 
-    # gs.fit(X_train, y_train)
 
-    # print(gs.score(X_test, y_test))
+    # gs.fit(x_data, y_data)
 
-    gs.fit(x_data, y_data)
+    # result = gs.cv_results_['mean_test_score'][0]
 
-    result = gs.cv_results_['mean_test_score'][0]
+    x_train, x_test, y_train, y_test = train_test_split(
+    dataMatrix['data'],  dataMatrix['classes'], test_size=0.4, random_state=0)
+
+    naiveBayes.fit(x_train, y_train)
+
+    result = naiveBayes.score(x_test, y_test)
+
+    # print(result)
 
     return round(result, DECIMAL_FIELDS)    
 

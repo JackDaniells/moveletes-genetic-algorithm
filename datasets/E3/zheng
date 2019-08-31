@@ -1,0 +1,20 @@
+#!/bin/bash
+export JAVA_OPTS="-Xmx100g -Xms1g"
+DODGE_PATH="../../../programs/Zheng.jar"
+
+if [ "$#" -ne 5 ]
+then 
+	echo "you need to define: (1) the dataset, (2) description file, and thresholds (3) HCR, (4) SR, and (5) VCR" 
+	exit 1
+fi
+
+DIR_PATH="../../../datasets/ACMSAC2018/E3/"$1"/"
+
+RESULTS_DIR_PATH="../../../results/ACMSAC2018/E3/"$1"/"
+
+mkdir -p $RESULTS_DIR_PATH
+
+BASENAME_DESC=$(basename $2)
+FILENAME_DESC=${BASENAME_DESC%.*}
+
+java $JAVA_OPTS -jar $DODGE_PATH -curpath $DIR_PATH -respath $RESULTS_DIR_PATH -descfile $2 -tHCR $3 -tSR $4 -tVCR $5 > $RESULTS_DIR_PATH"/Zheng_output.txt"

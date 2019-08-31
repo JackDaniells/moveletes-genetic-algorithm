@@ -1,0 +1,27 @@
+#!/bin/bash
+D1="1_geolife70/"
+ 
+DESCRIPTION="descriptions/spatialMovelets.json"
+NTHREADS=5
+
+PARAMS="$NTHREADS $DESCRIPTION"
+
+# Using 24 cores and 200 GB of Memory it takes around 4 hours
+bash movelets $D1 $PARAMS
+
+BUILD_MODEL="../../../programs/bmHOTransportationMovelets.R"
+RESULT_PATH="../../../results/ACMSAC2018/E3/"
+
+# it takes aprox. 20 minutes
+Rscript $BUILD_MODEL $RESULT_PATH$D1"Movelets/spatialMovelets/"
+
+BUILD_MODEL="../../../programs/bmHOTransportationCombining.R"
+
+# it takes aprox. 20 minutes
+Rscript $BUILD_MODEL $RESULT_PATH$D1 "Movelets/spatialMovelets/" "Dodge"
+
+# it takes aprox. 20 minutes
+Rscript $BUILD_MODEL $RESULT_PATH$D1 "Movelets/spatialMovelets/" "Zheng"
+
+# it takes aprox. 20 minutes
+Rscript $BUILD_MODEL $RESULT_PATH$D1 "Movelets/spatialMovelets/" "Xiao"

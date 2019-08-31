@@ -1,0 +1,11 @@
+#!/bin/bash
+D1="1_geolife70/"
+
+DESCRIPTION="descriptions/simple.json"
+
+bash dodge $D1 $DESCRIPTION
+
+BUILD_MODEL="../../../programs/bmHOTransportation.R"
+RESULT_PATH="../../../results/ACMSAC2018/E3/"
+
+Rscript $BUILD_MODEL $RESULT_PATH$D1"Dodge/"

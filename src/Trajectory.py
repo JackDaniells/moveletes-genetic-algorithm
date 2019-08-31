@@ -19,10 +19,11 @@ class Point:
 
 # classe trajetoria
 class Trajectory:
-    def __init__(self, fileName, dataset, group):
+    def __init__(self, fileName, dataset, group, datasetName):
         self.dataset = dataset
         self.group = group
         self.fileName = fileName
+        self.datasetName = datasetName
         self.points = []
 
     def addPoint(self, p):
@@ -83,15 +84,15 @@ def getDataset(d):
 
 
 # le os arquivos das pastas e retorna as trajetorias 
-def readDataset (datasetPosition): 
+def readDataset (datasetName, minSize): 
 
-    foldersName = [
-        '1_patel_hurricane_2vs3',
-        '2_patel_hurricane_1vs4',
-        '3_patel_hurricane_0vs45',
-        '4_patel_animals',
-        '5_patel_vehicle',
-    ]
+    # foldersName = [
+    #     '1_patel_hurricane_2vs3',
+    #     '2_patel_hurricane_1vs4',
+    #     '3_patel_hurricane_0vs45',
+    #     '4_patel_animals',
+    #     '5_patel_vehicle',
+    # ]
 
     experimental = "E1"
 
@@ -99,11 +100,11 @@ def readDataset (datasetPosition):
 
     # for datasetPosition in range(0, len(foldersName)):
 
-    dataset = getDataset(foldersName[datasetPosition])
+    dataset = getDataset(datasetName)
 
-    filePath = "./datasets/" + experimental + "/" + foldersName[datasetPosition] + '/train'
+    filePath = "./datasets/" + experimental + "/" + datasetName + '/train'
 
-    t = readFiles(filePath=filePath, dataset=dataset)
+    t = readFiles(filePath=filePath, dataset=dataset, minSize=minSize, datasetName=datasetName)
 
     trajectories.extend(t)
 
@@ -111,7 +112,7 @@ def readDataset (datasetPosition):
 
 
 # le os arquivos e monta as trajetorias
-def readFiles(filePath, dataset): 
+def readFiles(filePath, dataset, minSize, datasetName): 
 
     trajectories = []
 
@@ -129,7 +130,7 @@ def readFiles(filePath, dataset):
        
         group = getClass(fileName)
 
-        trajectory = Trajectory(fileName=fileName, dataset=dataset, group=group)
+        trajectory = Trajectory(fileName=fileName, dataset=dataset, group=group, datasetName=datasetName)
 
 
         # pega os pontos da trajetoria
@@ -144,7 +145,8 @@ def readFiles(filePath, dataset):
 
         # print(trajectory.size())
 
-        trajectories.append(trajectory)
+        if trajectory.size() > minSize:
+            trajectories.append(trajectory)
 
     return trajectories
 

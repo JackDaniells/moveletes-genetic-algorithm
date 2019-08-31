@@ -1,0 +1,39 @@
+#!/bin/bash
+D1="1_patel_hurricane_2vs3/"
+D2="2_patel_hurricane_1vs4/"
+D3="3_patel_hurricane_0vs45/"
+D4="4_patel_animals/"
+D5="5_patel_vehicle/"
+
+PARAMS_D1="4.24242400 0.23877920 0.03885423"
+PARAMS_D2="23.63636000 0.00552230 0.08048375"
+PARAMS_D3="25.45455000 0.00822163 0.10435890"
+PARAMS_D4="33.33333000 0.00007627 0.01340747"
+PARAMS_D5="21.21212 0.0917222 0.06714754"
+
+
+DESCRIPTION="descriptions/simple.json"
+
+# Feature Extraction
+bash zheng $D1 $DESCRIPTION $PARAMS_D1
+
+bash zheng $D2 $DESCRIPTION $PARAMS_D2
+
+bash zheng $D3 $DESCRIPTION $PARAMS_D3
+
+bash zheng $D4 $DESCRIPTION $PARAMS_D4
+
+bash zheng $D5 $DESCRIPTION $PARAMS_D5
+
+BUILD_MODEL="../../../programs/bmHO.r"
+RESULT_PATH="../../../results/ACMSAC2018/E2/"
+
+Rscript $BUILD_MODEL $RESULT_PATH$D1"Zheng/"
+
+Rscript $BUILD_MODEL $RESULT_PATH$D2"Zheng/"
+
+Rscript $BUILD_MODEL $RESULT_PATH$D3"Zheng/"
+
+Rscript $BUILD_MODEL $RESULT_PATH$D4"Zheng/"
+
+Rscript $BUILD_MODEL $RESULT_PATH$D5"Zheng/"

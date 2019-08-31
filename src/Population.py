@@ -1,17 +1,17 @@
 
 import random, uuid
 
-MOVELET_MAX_SIZE = 2
-
 
 # classe movelet
 class Movelet:
 
-    def __init__(self, trajectory, start, size):
+    def __init__(self, trajectory, start, size, minSize, maxSize):
         self.trajectory = trajectory
         self.start = start
         self.size = size
         self.distances = []
+        self.minSize = minSize
+        self.maxSize = maxSize
 
     def getPoints(self): 
 
@@ -43,12 +43,12 @@ class Movelet:
 
         if mutationType == 'size':
 
-            if self.trajectory.size() - self.start > 2:
+            if self.trajectory.size() - self.start > self.minSize:
             
-                self.size = random.randrange(2, self.trajectory.size() - self.start)
+                self.size = random.randrange(self.minSize, self.trajectory.size() - self.start)
 
-            if MOVELET_MAX_SIZE != 0 and self.size > MOVELET_MAX_SIZE:
-                self.size = MOVELET_MAX_SIZE
+            if self.maxSize != 0 and self.size > self.maxSize:
+                self.size = self.maxSize
 
 
         elif mutationType == 'start':
@@ -90,7 +90,7 @@ class Individual:
 
         
 
-def create(trajetories, individualSize, populationSize):
+def create(trajetories, individualSize, populationSize, moveletMaxSize, moveletMinSize):
 
     population = []
 
@@ -108,19 +108,21 @@ def create(trajetories, individualSize, populationSize):
             # print(t.size())
             # define o ponto de inicio aleatoriamente
             start = 0
-            if t.size() > 2:
-                start = random.randrange(0, t.size() - 2)
+            if t.size() > moveletMinSize:
+                start = random.randrange(0, t.size() - moveletMinSize)
 
             # define o tamanho do movelet aleatoriamente
-            s = 2
-            if  (t.size() - start) > 2:
-                s = random.randrange(2, t.size() - start)
+            s = moveletMinSize
+            if  (t.size() - start) > moveletMinSize:
+                s = random.randrange(moveletMinSize, t.size() - start)
 
-            if s > MOVELET_MAX_SIZE:
-                s = MOVELET_MAX_SIZE 
+            if s > moveletMaxSize:
+                s = moveletMaxSize 
 
             # cria o movelet
-            movelet = Movelet(trajectory=t, start=start, size=s)
+            movelet = Movelet(trajectory=t, start=start, size=s, maxSize=moveletMaxSize, minSize=moveletMinSize)
+
+            # print(movelet)
 
             movelets.append(movelet)
 

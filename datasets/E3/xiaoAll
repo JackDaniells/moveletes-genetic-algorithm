@@ -1,0 +1,13 @@
+#!/bin/bash
+D1="1_geolife70/"
+
+PARAMS_D1="15.0 2.5 0.7"
+
+DESCRIPTION="descriptions/simple.json"
+
+bash xiao $D1 $DESCRIPTION $PARAMS_D1
+
+BUILD_MODEL="../../../programs/bmHOTransportation.R"
+RESULT_PATH="../../../results/ACMSAC2018/E3/"
+
+Rscript $BUILD_MODEL $RESULT_PATH$D1"Xiao/"

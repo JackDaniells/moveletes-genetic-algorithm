@@ -21,7 +21,7 @@ def rankIndividual(individual, trajectories):
 
     # salvar o dataset e fazer crossover dele tambem na reprodução pra nao precisar calcular tudo de novo
 
-    print("[" + str(datetime.datetime.now()) + "] " + str(individual.score))
+    # print("[" + str(datetime.datetime.now()) + "] " + str(individual.score) + ' - ' + str(individual))
 
     return individual
     
@@ -31,6 +31,8 @@ def rankPopulation(population, trajectories):
     fitness = []
     
     for ind in population:
+
+        # print(ind)
 
         ftnss = rankIndividual(individual=ind, trajectories=trajectories)
         

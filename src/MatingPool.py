@@ -1,7 +1,7 @@
 
 from src import Population
 
-import copy
+# import copy
 
 import random
 
@@ -62,7 +62,7 @@ def breedPopulation(matingpool, eliteSize):
     pool = random.sample(matingpool, len(matingpool))
 
     for i in range(0,eliteSize):
-        children.append(copy.deepcopy(matingpool[i]))
+        children.append(matingpool[i])
     
     for i in range(0, length):
         child = breedIndividual(pool[i], pool[len(matingpool)-i-1])

@@ -1,0 +1,43 @@
+{
+   "readsDesc": [
+        {
+          "order": 1,
+          "type": "numeric",
+          "text": "time"
+        },
+        {
+          "order": 2,
+          "type": "space2d",
+          "text": "space"
+        }
+      ],
+    "pointFeaturesDesc": [
+      ],
+    "subtrajectoryFeaturesDesc": [
+		],
+    "trajectoryFeaturesDesc": [
+		"timeduration",	
+        "traveledDistance",
+        "averageSpeed",
+		"forTransportationMode"
+      ],
+    "pointComparisonDesc": {
+      "pointDistance": "euclidean",
+      "featureComparisonDesc": [
+			{
+			  "distance": "euclidean",
+			  "maxValue": -1,
+			  "text": "space"
+			}		  
+      ]
+    },
+    "subtrajectoryComparisonDesc": {
+      "subtrajectoryDistance": "euclidean",
+      "featureComparisonDesc": [
+			{
+			  "distance": "euclidean",
+			  "text": "points"
+			}
+		]
+    }  
+}

@@ -1,0 +1,20 @@
+#!/bin/bash
+export JAVA_OPTS="-Xmx100g -Xms1g"
+SHAPELETS_PATH="../../../programs/Movelets.jar"
+
+if [ "$#" -ne 3 ]
+then 
+	echo "you need to define: (1) the dataset, (2) third the number of threads, (3) the description file"
+	exit 1
+fi
+
+DIR_PATH="../../../datasets/ACMSAC2018/E2/"$1"/"
+
+RESULTS_DIR_PATH="../../../results/ACMSAC2018/E2/"$1"/"
+
+mkdir -p $RESULTS_DIR_PATH
+
+BASENAME_DESC=$(basename $3)
+FILENAME_DESC=${BASENAME_DESC%.*}
+
+java $JAVA_OPTS -jar $SHAPELETS_PATH -curpath $DIR_PATH -respath $RESULTS_DIR_PATH -descfile $3 -nt $2 > $RESULTS_DIR_PATH$6$FILENAME_DESC"_output.txt"
