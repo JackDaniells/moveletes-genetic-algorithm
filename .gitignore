@@ -1,3 +1,8 @@
+results/*
+tests
+weka/files/*
+.vscode
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 src/__pycache__/

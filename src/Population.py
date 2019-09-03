@@ -56,7 +56,6 @@ class Movelet:
             if self.trajectory.size() - self.size > 0:
 
                 self.start = random.randrange(self.trajectory.size() - self.size)
-            
     
     def __repr__(self):
         return "(" + str(self.trajectory.fileName) + ":\t | Start:" + str(self.start) + ", Length:" + str(self.size) + ")"
@@ -65,13 +64,13 @@ class Movelet:
 # classe individuo
 class Individual:
 
-    def __init__(self, movelets):
+    def __init__(self, movelets, score):
 
         self.id = uuid.uuid4()
 
         self.movelets = movelets
         
-        self.cleanScore()
+        self.score = score
 
 
     def size(self):
@@ -103,7 +102,9 @@ def create(trajetories, individualSize, populationSize, moveletMaxSize, moveletM
         for s in range(0, individualSize):
 
             # pega uma trajetoria aleatoriamente
-            t = trajetories[random.randrange(len(trajetories))]
+            # t = trajetories[random.randrange(0, len(trajetories))]
+            
+            t = trajetories[s % len(trajetories)]
 
             # print(t.size())
             # define o ponto de inicio aleatoriamente
@@ -120,13 +121,16 @@ def create(trajetories, individualSize, populationSize, moveletMaxSize, moveletM
                 s = moveletMaxSize 
 
             # cria o movelet
-            movelet = Movelet(trajectory=t, start=start, size=s, maxSize=moveletMaxSize, minSize=moveletMinSize)
+            movelet = Movelet(trajectory=t,start=start, size=s, maxSize=moveletMaxSize, minSize=moveletMinSize)
 
+           
             # print(movelet)
 
             movelets.append(movelet)
 
-        ind = Individual(movelets=movelets)
+        ind = Individual(movelets=movelets, score=0)
+
+        # print('============================================')
         
         population.append(ind)
         

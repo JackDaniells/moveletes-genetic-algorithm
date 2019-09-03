@@ -9,20 +9,26 @@ def rankIndividual(individual, trajectories):
 
 
     # print("[" + str(datetime.datetime.now()) + "] " + "Calculating Individual Fitness...")
+
+    if individual.score == 0:
+
+        # print("[" + str(datetime.datetime.now()) + "] getting distance matrix..")
     
-    distanceMatix = Classification.calculateDistanceMatrix(individual=individual, trajectories=trajectories)
+        distanceMatix = Classification.calculateDistanceMatrix(individual=individual, trajectories=trajectories)
 
-    # print(distanceMatix)
+        # print(distanceMatix)
 
-    individual.score = Classification.calculateScore(distanceMatix)
+        # print("[" + str(datetime.datetime.now()) + "] calcing score...")
 
-    # print("[" + str(datetime.datetime.now()) + "] " + "Done!")
-    # usar o dtw pra calcular distancia de cada movelet pra cada trajetoria e depois jogar isso no classificador (Naive Bayes)
+        individual.score = Classification.calculateScore(distanceMatix)
 
-    # salvar o dataset e fazer crossover dele tambem na reprodução pra nao precisar calcular tudo de novo
+        # print("[" + str(datetime.datetime.now()) + "] " + "Done!")
+        # usar o dtw pra calcular distancia de cada movelet pra cada trajetoria e depois jogar isso no classificador (Naive Bayes)
 
-    # print("[" + str(datetime.datetime.now()) + "] " + str(individual.score) + ' - ' + str(individual))
+        # salvar o dataset e fazer crossover dele tambem na reprodução pra nao precisar calcular tudo de novo
 
+    print("[" + str(datetime.datetime.now()) + "] " + str(individual.score) + ' - ' + str(individual))
+    
     return individual
     
 
@@ -31,8 +37,6 @@ def rankPopulation(population, trajectories):
     fitness = []
     
     for ind in population:
-
-        # print(ind)
 
         ftnss = rankIndividual(individual=ind, trajectories=trajectories)
         

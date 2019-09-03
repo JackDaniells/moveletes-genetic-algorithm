@@ -1,36 +1,11 @@
 
 from src import Population
 
-# import copy
-
 import random
 
-#TODO: revisar
-# def breedIndividual(parent1, parent2):
+import datetime
 
-#     ind1 = []
-
-#     ind2 = []
-
-#     #  define o ponto de corte
-#     splitPoint = random.randrange(parent1.size() - 1)
-#     # splitPoint = int(parent1.size() / 2)
-
-#     for i in range(parent1.size()):
-
-#         if i < splitPoint:
-
-#             ind1.append(parent1.movelets[i])
-#             ind2.append(parent2.movelets[i])
-
-#         else:
-
-#             ind1.append(parent2.movelets[i])
-#             ind2.append(parent1.movelets[i])
-
-
-#     return Population.Individual(ind1), Population.Individual(ind2)
-#     return parent1, parent2
+import copy
 
 def breedIndividual(parent1, parent2):
     child = []
@@ -52,7 +27,29 @@ def breedIndividual(parent1, parent2):
 
     del childP1, childP2
 
-    return  Population.Individual(child)
+    movelets = child
+
+    # for j in range(0, len(child)):
+
+    #     movelets.append(copy.copy(child[j]))
+        # print('--------------------------')
+        # print(movelets[j])
+        # print(child[j])
+        # print('--------------------------')
+    
+    # for movelet in child:
+    #     newMovelet = Population.Movelet(
+    #         trajectory=movelet.trajectory, 
+    #         start=movelet.start, 
+    #         size=movelet.size, 
+    #         minSize=movelet.minSize, 
+    #         maxSize=movelet.maxSize
+    #     )
+    #     movelets.append(newMovelet)
+        # print("[" + str(datetime.datetime.now()) + "] copy done") 
+
+
+    return Population.Individual(movelets=movelets, score=0)
 
 
 def breedPopulation(matingpool, eliteSize):
@@ -67,6 +64,7 @@ def breedPopulation(matingpool, eliteSize):
     for i in range(0, length):
         child = breedIndividual(pool[i], pool[len(matingpool)-i-1])
         children.append(child)
+    
     return children
 
 
@@ -75,14 +73,27 @@ def breedPopulation(matingpool, eliteSize):
 
 def mutateIndividual(individual, mutationRate):
 
+    print ('Mutating individual!')
+
+    mutatePos = random.randrange(0, len(individual.movelets))
+
+    oldMovelet = individual.movelets[mutatePos]
+
+    newMovelet = Population.Movelet(trajectory=oldMovelet.trajectory, start=oldMovelet.start, size=oldMovelet.size, minSize=oldMovelet.minSize, maxSize=oldMovelet.maxSize)
+
+    newMovelet.mutate()
+
+    individual.movelets[mutatePos] = newMovelet
+
+
+    #  zera o score do individuo
+    individual.cleanScore()
+
     # percorre os movelets no individuo
-    for swapped in individual.movelets:
-
-        if(random.random() < mutationRate):
+    # for swapped in individual.movelets:
+        # if(random.random() < mutationRate):
+            # swapped.mutate()
             
-            swapped.mutate()
-
-            #  zera o score do individuo
 
     return individual
 
@@ -93,7 +104,10 @@ def mutatePopulation(population, mutationRate):
     
     for individual in population:
 
-        mutatedInd = mutateIndividual(individual=individual, mutationRate=mutationRate)
+        if(random.random() < mutationRate):
+            mutatedInd = mutateIndividual(individual=individual, mutationRate=mutationRate)
+        else:
+            mutatedInd = individual
 
         mutatedPop.append(mutatedInd)
         

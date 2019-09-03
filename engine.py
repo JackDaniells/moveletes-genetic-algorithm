@@ -3,16 +3,15 @@ from src import Population, Trajectory, GeneticAlgorithm
 import matplotlib.pyplot as plt
 import datetime
 
-INDIVIDUAL_SIZE = 100
-POPULATION_SIZE = 5
-ELITE_SIZE = 5
-MUTATION_RATE = 0.001
-GENERATIONS = 5
 
 MOVELET_MIN_SIZE = 1
 MOVELET_MAX_SIZE = 2
 
-def run(DATASET_NAME):
+def run(DATASET_NAME, INDIVIDUAL_SIZE, POPULATION_SIZE, ELITE_SIZE, MUTATION_RATE, GENERATIONS):
+
+    if POPULATION_SIZE < ELITE_SIZE:
+        print ('PARAMETROS INCORRETOS')
+        return
 
     print("[" + str(datetime.datetime.now()) + "] " + "Program started!")
 
@@ -58,6 +57,6 @@ def run(DATASET_NAME):
     plt.xlabel('Generation')
     # plt.show()
 
-    plt.savefig('tests/' + DATASET_NAME + '_' + str(int(finishTime.timestamp())) + '.png')
+    plt.savefig('results/' + DATASET_NAME + '_' + str(int(finishTime.timestamp())) + '.png')
 
     print("[" + str(datetime.datetime.now()) + "] " + "Program completed!")

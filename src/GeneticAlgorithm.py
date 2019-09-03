@@ -20,11 +20,18 @@ def run(population, eliteSize, mutationRate, generations, trajectories):
     
     for i in range(0, generations):
 
-        print("[" + str(datetime.datetime.now()) + "] " + "Generation " + str(i))
+        print("[" + str(datetime.datetime.now()) + "] " + "Generation " + str(i) )
 
-        gen, bestRanked = nextGeneration(currentGen=gen, eliteSize=eliteSize, mutationRate=mutationRate, trajectories=trajectories)[:]
+        gen, betterScore = nextGeneration(currentGen=gen, eliteSize=eliteSize, mutationRate=mutationRate, trajectories=trajectories)
 
-        progress.append(bestRanked)
+        # betterScore = 0
+        # for i in gen:
+        #     if i.score > betterScore:
+        #         betterScore = i.score
+
+        progress.append(betterScore)
+
+        print(betterScore)
 
         gc.collect()
 
@@ -42,23 +49,28 @@ def run(population, eliteSize, mutationRate, generations, trajectories):
 def nextGeneration(currentGen, eliteSize, mutationRate, trajectories):
 
     # rankeia os individuos
+    print("[" + str(datetime.datetime.now()) + "] rankPopulation")
     popRanked = Fitness.rankPopulation(population=currentGen, trajectories=trajectories)
     
-    bestRanked = popRanked[0].score
-
     # seleciona os melhores para reprodução
+    print("[" + str(datetime.datetime.now()) + "] selection")
     selectionResults = Fitness.selection(popRanked=popRanked, eliteSize=eliteSize)
 
-    # limpa a variavel da memoria
+    bestRanked = selectionResults[0].score
+
+    # limpa a variavel da memoria        
     del popRanked
 
+
     # faz o crossover entre os individuos
+    print("[" + str(datetime.datetime.now()) + "] crossover")
     children = MatingPool.breedPopulation(matingpool=selectionResults, eliteSize=eliteSize)
 
     # limpa a variavel da memoria
     del selectionResults
 
     # faz a mutação dos indivíduos
+    print("[" + str(datetime.datetime.now()) + "] mutation")
     nextGeneration = MatingPool.mutatePopulation(population=children, mutationRate=mutationRate)
     
     return nextGeneration, bestRanked

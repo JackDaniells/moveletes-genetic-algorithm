@@ -4,7 +4,7 @@ import timeit, numpy, time
 from sklearn.svm import SVR
 
 
-from sklearn.naive_bayes import GaussianNB
+from sklearn.naive_bayes import GaussianNB, MultinomialNB
 from scipy.spatial.distance import euclidean
 from sklearn.model_selection import GridSearchCV, StratifiedKFold, train_test_split
 
@@ -32,11 +32,9 @@ def calculateDistanceMatrix(individual, trajectories):
 
         trajectory = trajectories[i]
 
-        t1 = trajectory.getPoints()
+        tp = trajectory.getPoints()
 
-    
-        dataMatrixCol = []
-    
+        dataMatrixCol = []    
 
         # itera as trajetorias
         for j in range(0, len(individual.movelets)):
@@ -45,45 +43,45 @@ def calculateDistanceMatrix(individual, trajectories):
 
             distance = 0
 
+            # só calcula se o movelet nao for da trajetoria em questao, senao distancia = 0            
+            if trajectory.fileName == movelet.trajectory.fileName:
+
+                distance = 0
+
             # verifica se a distancia ja esta calculada
-            if len(movelet.distances) == len(trajectories): 
+            elif len(movelet.distances) == len(trajectories): 
 
                 distance = movelet.distances[i]
 
             else:
 
-                t2 = movelet.getPoints()
+                movelet.distances = []
 
+                mp = movelet.getPoints()
                 
-                # só calcula se o movelet nao for da trajetoria em questao, senao distancia = 0
                 # if movelet.trajectory.fileName != trajectory.fileName:
 
-                moveletsIteractions =  len(t2) - 1
+                moveletsIteractions = len(mp)
 
-                trajectoryIteractions = len(t1) - moveletsIteractions
+                trajectoryIteractions = len(tp) - len(mp) + 1
 
                 for t in range(0, trajectoryIteractions):
 
                     distanceCalculated = 0
 
-                    for m in range(0, moveletsIteractions):
+                    for m in range(0, moveletsIteractions - 1):
 
                         p = t + m
 
-                        distanceCalculated += euclidean(t1[p], t2[m])
+                        distanceCalculated += euclidean(tp[p], mp[m])
                         
                 
                     if distanceCalculated > 0:
-                        distanceCalculated = distanceCalculated / len(t2)
+                        distanceCalculated = distanceCalculated / len(mp)
 
                     # se a distancia calculada for menor que zero ou for a primeira iteração 
                     if distanceCalculated < distance or t == 0:
                         distance = distanceCalculated
-
-                # d = d[dtw] / |movelet|
-                # distance = round(float(distance / len(t1)), 2)
-
-                # distance = round(distance, DECIMAL_FIELDS)
 
                 movelet.distances.append(distance)
 
@@ -124,23 +122,26 @@ def calculateScore(dataMatrix):
 
     y_data = dataMatrix['classes']
 
-    # saveInCSV(x_data, y_data)
+    saveInCSV(x_data, y_data)
 
 
     # cross validation
-    # gs = GridSearchCV(naiveBayes, cv=CROSS_VALIDATION_FOLDS, param_grid={}, return_train_score=False, n_jobs=-1, iid=True) 
+    gs = GridSearchCV(naiveBayes, cv=CROSS_VALIDATION_FOLDS, param_grid={}, return_train_score=False, n_jobs=-1, iid=True) 
 
 
-    # gs.fit(x_data, y_data)
+    gs.fit(x_data, y_data)
 
-    # result = gs.cv_results_['mean_test_score'][0]
+    result = gs.cv_results_['mean_test_score'][0]
 
-    x_train, x_test, y_train, y_test = train_test_split(
-    dataMatrix['data'],  dataMatrix['classes'], test_size=0.4, random_state=0)
+    # x_train, x_test, y_train, y_test = train_test_split(dataMatrix['data'],  dataMatrix['classes'], test_size=0.4, random_state=0)
 
-    naiveBayes.fit(x_train, y_train)
+    # naiveBayes.fit(x_train, y_train)
 
-    result = naiveBayes.score(x_test, y_test)
+    # saveInCSV(x_train, y_train)
+
+    # saveInCSV(x_test, y_test)
+
+    # result = naiveBayes.score(x_test, y_test)
 
     # print(result)
 
