@@ -16,11 +16,8 @@ def run(population, eliteSize, mutationRate, generations, trajectories):
 
     gen = population
 
-<<<<<<< HEAD
-=======
     # tracemalloc.start()
     
->>>>>>> af99f2733843a6668dc98c07ded0b92a4aeaf3f3
     progress = []
     
     for i in range(0, generations):

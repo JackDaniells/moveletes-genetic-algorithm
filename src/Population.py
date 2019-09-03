@@ -102,9 +102,9 @@ def create(trajetories, individualSize, populationSize, moveletMaxSize, moveletM
         for s in range(0, individualSize):
 
             # pega uma trajetoria aleatoriamente
-            # t = trajetories[random.randrange(0, len(trajetories))]
+            t = trajetories[random.randrange(0, len(trajetories))]
             
-            t = trajetories[s % len(trajetories)]
+            # t = trajetories[s % len(trajetories)]
 
             # print(t.size())
             # define o ponto de inicio aleatoriamente

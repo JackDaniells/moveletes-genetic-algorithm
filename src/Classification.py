@@ -13,7 +13,7 @@ from sklearn.metrics import classification_report
 from sklearn import preprocessing
 
 
-DECIMAL_FIELDS = 5
+DECIMAL_FIELDS = 8
 
     
 
@@ -59,8 +59,6 @@ def calculateDistanceMatrix(individual, trajectories):
 
                 mp = movelet.getPoints()
                 
-                # if movelet.trajectory.fileName != trajectory.fileName:
-
                 moveletsIteractions = len(mp)
 
                 trajectoryIteractions = len(tp) - len(mp) + 1
@@ -69,13 +67,13 @@ def calculateDistanceMatrix(individual, trajectories):
 
                     distanceCalculated = 0
 
-                    for m in range(0, moveletsIteractions - 1):
+                    for m in range(0, moveletsIteractions):
 
                         p = t + m
 
                         distanceCalculated += euclidean(tp[p], mp[m])
                         
-                
+                    # divide a distancia pela qtde de movelets
                     if distanceCalculated > 0:
                         distanceCalculated = distanceCalculated / len(mp)
 
@@ -85,12 +83,12 @@ def calculateDistanceMatrix(individual, trajectories):
 
                 movelet.distances.append(distance)
 
-            # TODO: calcular o split point (?)
-
             dataMatrixCol.append(distance)
 
         dataMatrix['data'].append(dataMatrixCol)
         dataMatrix['classes'].append(trajectory.group)
+
+        del dataMatrixCol
 
     # print(dataMatrix)
 
@@ -104,44 +102,51 @@ def calculateScore(dataMatrix):
     
     CROSS_VALIDATION_FOLDS = 2
 
-    naiveBayes = GaussianNB()
+    naiveBayes = GaussianNB(priors=None, var_smoothing=1e-09)
     
-    # print(dataMatrix)
-
-    # salva o csv dos arquivos
-
     # normaliza e padroniza dos dados
 
     # x_data = preprocessing.normalize(dataMatrix['data'])
 
-    x_data = dataMatrix['data']
+    # x_data = dataMatrix['data']
 
     # x_data = preprocessing.KBinsDiscretizer(n_bins=50, encode='ordinal', strategy='uniform').fit(dataMatrix['data'])
 
     # x_data = x_data.transform(dataMatrix['data'])
 
-    y_data = dataMatrix['classes']
+    # y_data = dataMatrix['classes']
 
-    saveInCSV(x_data, y_data)
-
+    # salva o csv dos arquivos
+    # saveInCSV(x_data, y_data)
 
     # cross validation
-    gs = GridSearchCV(naiveBayes, cv=CROSS_VALIDATION_FOLDS, param_grid={}, return_train_score=False, n_jobs=-1, iid=True) 
+    # gs = GridSearchCV(naiveBayes, cv=CROSS_VALIDATION_FOLDS, param_grid={}, return_train_score=False, n_jobs=-1, iid=True) 
 
 
-    gs.fit(x_data, y_data)
+    # gs.fit(x_data, y_data)
 
-    result = gs.cv_results_['mean_test_score'][0]
+    # result = gs.cv_results_['mean_test_score'][0]
 
-    # x_train, x_test, y_train, y_test = train_test_split(dataMatrix['data'],  dataMatrix['classes'], test_size=0.4, random_state=0)
+    # del gs
 
-    # naiveBayes.fit(x_train, y_train)
+    x_train, x_test, y_train, y_test = train_test_split(
+        dataMatrix['data'],  
+        dataMatrix['classes'], 
+        test_size=0.4, 
+        train_size=0.6, 
+        random_state=None,
+        shuffle=True
+    )
+
+    naiveBayes.fit(x_train, y_train)
 
     # saveInCSV(x_train, y_train)
 
     # saveInCSV(x_test, y_test)
 
-    # result = naiveBayes.score(x_test, y_test)
+    result = naiveBayes.score(x_test, y_test)
+
+    del naiveBayes
 
     # print(result)
 
@@ -165,6 +170,6 @@ def saveInCSV(x, y):
 
     a = numpy.asarray(dataToCSV)
 
-    numpy.savetxt(""+ str(timeit.default_timer()) +".csv", a, delimiter=",", fmt='%s')
+    numpy.savetxt("csv/"+ str(timeit.default_timer()) +".csv", a, delimiter=",", fmt='%s')
 
 

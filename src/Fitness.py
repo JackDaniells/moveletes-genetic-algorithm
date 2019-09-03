@@ -23,9 +23,10 @@ def rankIndividual(individual, trajectories):
         individual.score = Classification.calculateScore(distanceMatix)
 
         # print("[" + str(datetime.datetime.now()) + "] " + "Done!")
-        # usar o dtw pra calcular distancia de cada movelet pra cada trajetoria e depois jogar isso no classificador (Naive Bayes)
 
         # salvar o dataset e fazer crossover dele tambem na reprodução pra nao precisar calcular tudo de novo
+
+        del distanceMatix 
 
     print("[" + str(datetime.datetime.now()) + "] " + str(individual.score) + ' - ' + str(individual))
     
