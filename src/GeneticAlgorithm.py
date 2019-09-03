@@ -5,7 +5,7 @@ import datetime
 
 import gc
 
-import tracemalloc
+# import tracemalloc
 
 
 
@@ -16,6 +16,11 @@ def run(population, eliteSize, mutationRate, generations, trajectories):
 
     gen = population
 
+<<<<<<< HEAD
+=======
+    # tracemalloc.start()
+    
+>>>>>>> af99f2733843a6668dc98c07ded0b92a4aeaf3f3
     progress = []
     
     for i in range(0, generations):
@@ -33,10 +38,13 @@ def run(population, eliteSize, mutationRate, generations, trajectories):
 
         print(betterScore)
 
-        gc.collect()
-
+        
         # snapshot = tracemalloc.take_snapshot()
         # top_stats = snapshot.statistics('lineno')
+
+        # print("[ Top 10 ]")
+        # for stat in top_stats[:10]:
+        #     print(stat)
 
         # print("[ Top 10 ]")
         # for stat in top_stats[:10]:
