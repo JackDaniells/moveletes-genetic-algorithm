@@ -124,7 +124,7 @@ def calculateScore(dataMatrix):
     y_data = dataMatrix['classes']
 
     # salva o csv dos arquivos
-    saveInCSV(x_data, y_data)
+    # saveInCSV(x_data, y_data)
 
     # cross validation
     # gs = GridSearchCV(naiveBayes, cv=CROSS_VALIDATION_FOLDS, param_grid={}, return_train_score=False, n_jobs=-1, iid=True) 
@@ -149,9 +149,9 @@ def calculateScore(dataMatrix):
 
     naiveBayes.fit(x_train, y_train)
 
-    # saveInCSV(x_train, y_train)
+    saveInCSV(x_train, y_train)
 
-    # saveInCSV(x_test, y_test)
+    saveInCSV(x_test, y_test)
 
     result = naiveBayes.score(x_test, y_test)
 

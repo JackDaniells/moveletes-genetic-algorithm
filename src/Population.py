@@ -60,7 +60,7 @@ class Movelet:
                 self.start = random.randrange(self.trajectory.size() - self.size)
     
     def __repr__(self):
-        return "(" + str(self.trajectory.fileName) + ":\t | Start:" + str(self.start) + ", Length:" + str(self.size) + ")"
+        return "(" + self.trajectory.group + ' - ' + str(self.trajectory.fileName) + ":\t | Start:" + str(self.start) + ", Length:" + str(self.size) + ")"
 
 
 # classe individuo
@@ -137,6 +137,8 @@ def create(trajetories, individualSize, populationSize, moveletMaxSize, moveletM
 
         ind.score = Fitness.rankIndividual(ind, trajetories)
 
+        print('-----------------------------------------')
+
         print(ind.score)
 
         # for i in scoreSaved:
@@ -145,21 +147,23 @@ def create(trajetories, individualSize, populationSize, moveletMaxSize, moveletM
                 
         #         print('Score igual, recalculando pra ter certeza')
         #         print(Fitness.rankIndividual(ind, trajetories))
-        #         print('-----------------------------------------')
-
+               
         #     else:
-        #         print('nenhum igual')
-        #         scoreSaved.append(ind.score)
+                # print('nenhum igual')
+        scoreSaved.append(ind.score)
 
         # if len(scoreSaved) == 0:
         #     scoreSaved.append(ind.score)
 
+        print('-----------------------------------------')
 
         del movelets
 
         # print('============================================')
         
         population.append(ind)
-        
+
+    
+    print(scoreSaved)   
     return population
 
