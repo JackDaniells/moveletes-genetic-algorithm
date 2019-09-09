@@ -33,7 +33,7 @@ def rankIndividual(individual, trajectories):
 
         gc.collect()
 
-    # print("[" + str(datetime.datetime.now()) + "] " + str(score) + ' - ' + str(individual))
+    print("[" + str(datetime.datetime.now()) + "] " + str(score) + ' - ' + str(individual))
     
     return score
     

@@ -17,11 +17,11 @@ import engine
 
 engine.run(
     DATASET_NAME='4_patel_animals', 
-    INDIVIDUAL_SIZE=10, 
+    INDIVIDUAL_SIZE=5, 
     POPULATION_SIZE=10, 
-    ELITE_SIZE=5, 
+    ELITE_SIZE=1, 
     MUTATION_RATE=0.01, 
-    GENERATIONS=1
+    GENERATIONS=100
 )
 
 # engine.run(

@@ -135,35 +135,11 @@ def create(trajetories, individualSize, populationSize, moveletMaxSize, moveletM
 
         ind = Individual(movelets=movelets, score=0)
 
-        ind.score = Fitness.rankIndividual(ind, trajetories)
-
-        print('-----------------------------------------')
-
-        print(ind.score)
-
-        # for i in scoreSaved:
-        #     print(' ------ ' + str(i))
-        #     if i == ind.score:
-                
-        #         print('Score igual, recalculando pra ter certeza')
-        #         print(Fitness.rankIndividual(ind, trajetories))
-               
-        #     else:
-                # print('nenhum igual')
-        scoreSaved.append(ind.score)
-
-        # if len(scoreSaved) == 0:
-        #     scoreSaved.append(ind.score)
-
-        print('-----------------------------------------')
+        # ind.score = Fitness.rankIndividual(ind, trajetories)
 
         del movelets
-
-        # print('============================================')
         
         population.append(ind)
 
-    
-    print(scoreSaved)   
     return population
 

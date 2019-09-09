@@ -1,5 +1,5 @@
 # from scipy.spatial import distance
-import timeit, numpy, time 
+import timeit, numpy, time, datetime
 
 from sklearn.svm import SVR
 
@@ -19,6 +19,8 @@ DECIMAL_FIELDS = 8
 
 def calculateDistanceMatrix(individual, trajectories):
 
+    # print("[" + str(datetime.datetime.now()) + "] " + "calculateDistanceMatrix start")
+
 
     dataMatrix = {
         'data': [],
@@ -30,7 +32,7 @@ def calculateDistanceMatrix(individual, trajectories):
     # print(hex(id(dataMatrix)))
 
 
-    # itera o individuo
+    # itera as trajetorias
     for i in range(0, len(trajectories)):
 
         trajectory = trajectories[i]
@@ -38,27 +40,32 @@ def calculateDistanceMatrix(individual, trajectories):
         tp = trajectory.getPoints()
 
         dataMatrixCol = []    
-
-        # itera as trajetorias
+        
+        # itera o individuo
         for j in range(0, len(individual.movelets)):
 
             movelet = individual.movelets[j]
 
             distance = 0
 
+            # print(movelet.distances)
+
             # só calcula se o movelet nao for da trajetoria em questao, senao distancia = 0            
             if trajectory.fileName == movelet.trajectory.fileName:
-
                 distance = 0
 
             # verifica se a distancia ja esta calculada
-            elif len(movelet.distances) == len(trajectories): 
+            elif len(movelet.distances) == len(trajectories):
+
+                # print('array de distancias calculada')
 
                 distance = movelet.distances[i]
 
             else:
 
-                movelet.distances = []
+                # print('array de distancias nao calculada')
+
+                # movelet.distances = []
 
                 mp = movelet.getPoints()
                 
@@ -99,6 +106,8 @@ def calculateDistanceMatrix(individual, trajectories):
 
     del dataMatrix
 
+    # print("[" + str(datetime.datetime.now()) + "] " + "calculateDistanceMatrix end")
+
     return dataReturn
 
 
@@ -108,6 +117,8 @@ def calculateDistanceMatrix(individual, trajectories):
 def calculateScore(dataMatrix):
     
     CROSS_VALIDATION_FOLDS = 2
+    
+    # print("[" + str(datetime.datetime.now()) + "] " + "classification started")
 
     naiveBayes = GaussianNB(priors=None, var_smoothing=1e-09)
     
@@ -158,6 +169,8 @@ def calculateScore(dataMatrix):
     del naiveBayes, x_data, y_data, x_train, x_test, y_train, y_test
 
     # print(result)
+
+    # print("[" + str(datetime.datetime.now()) + "] " + "classification end")
 
     return round(result, DECIMAL_FIELDS)    
 

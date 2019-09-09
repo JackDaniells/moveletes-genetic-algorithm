@@ -5,8 +5,6 @@ import random
 
 import datetime
 
-import copy
-
 def breedIndividual(parent1, parent2):
     child = []
     childP1 = []
@@ -28,27 +26,6 @@ def breedIndividual(parent1, parent2):
     del childP1, childP2
 
     movelets = child
-
-    # for j in range(0, len(child)):
-
-    #     movelets.append(copy.copy(child[j]))
-        # print('--------------------------')
-        # print(movelets[j])
-        # print(child[j])
-        # print('--------------------------')
-    
-    # for movelet in child:
-    #     newMovelet = Population.Movelet(
-    #         trajectory=movelet.trajectory, 
-    #         start=movelet.start, 
-    #         size=movelet.size, 
-    #         minSize=movelet.minSize, 
-    #         maxSize=movelet.maxSize
-    #     )
-    #     movelets.append(newMovelet)
-        # print("[" + str(datetime.datetime.now()) + "] copy done") 
-
-
     return Population.Individual(movelets=movelets, score=0)
 
 
