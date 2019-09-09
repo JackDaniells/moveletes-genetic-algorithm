@@ -1,7 +1,8 @@
 
-import operator, random, datetime, pandas, numpy
+import operator, random, datetime, pandas, numpy, gc
 
 from src import Classification
+
 
 
     
@@ -16,7 +17,7 @@ def rankIndividual(individual, trajectories):
     
         distanceMatix = Classification.calculateDistanceMatrix(individual=individual, trajectories=trajectories)
 
-        # print(distanceMatix)
+        # print(hex(id(distanceMatix)))
 
         # print("[" + str(datetime.datetime.now()) + "] calcing score...")
 
@@ -26,7 +27,9 @@ def rankIndividual(individual, trajectories):
 
         # salvar o dataset e fazer crossover dele tambem na reprodução pra nao precisar calcular tudo de novo
 
-        del distanceMatix 
+        del distanceMatix
+
+        gc.collect()
 
     print("[" + str(datetime.datetime.now()) + "] " + str(individual.score) + ' - ' + str(individual))
     

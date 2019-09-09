@@ -24,4 +24,13 @@ engine.run(
     GENERATIONS=350
 )
 
+engine.run(
+    DATASET_NAME='5_patel_vehicle', 
+    INDIVIDUAL_SIZE=100, 
+    POPULATION_SIZE=100, 
+    ELITE_SIZE=5, 
+    MUTATION_RATE=0.01, 
+    GENERATIONS=350
+)
+
 

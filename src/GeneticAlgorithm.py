@@ -35,6 +35,8 @@ def run(population, eliteSize, mutationRate, generations, trajectories):
 
         print(betterScore)
 
+        gc.collect()
+
         
         # snapshot = tracemalloc.take_snapshot()
         # top_stats = snapshot.statistics('lineno')

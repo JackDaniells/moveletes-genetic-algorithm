@@ -27,6 +27,9 @@ def calculateDistanceMatrix(individual, trajectories):
 
     dataMatrixCol = []
 
+    # print(hex(id(dataMatrix)))
+
+
     # itera o individuo
     for i in range(0, len(trajectories)):
 
@@ -92,7 +95,11 @@ def calculateDistanceMatrix(individual, trajectories):
 
     # print(dataMatrix)
 
-    return dataMatrix
+    dataReturn = dataMatrix.copy()
+
+    del dataMatrix
+
+    return dataReturn
 
 
 
@@ -106,7 +113,7 @@ def calculateScore(dataMatrix):
     
     # normaliza e padroniza dos dados
 
-    # x_data = preprocessing.normalize(dataMatrix['data'])
+    x_data = preprocessing.normalize(dataMatrix['data'])
 
     # x_data = dataMatrix['data']
 
@@ -114,7 +121,7 @@ def calculateScore(dataMatrix):
 
     # x_data = x_data.transform(dataMatrix['data'])
 
-    # y_data = dataMatrix['classes']
+    y_data = dataMatrix['classes']
 
     # salva o csv dos arquivos
     # saveInCSV(x_data, y_data)
@@ -129,9 +136,11 @@ def calculateScore(dataMatrix):
 
     # del gs
 
+    # print(dataMatrix['data'][0])
+
     x_train, x_test, y_train, y_test = train_test_split(
-        dataMatrix['data'],  
-        dataMatrix['classes'], 
+        x_data,  
+        y_data, 
         test_size=0.4, 
         train_size=0.6, 
         random_state=None,
@@ -146,7 +155,7 @@ def calculateScore(dataMatrix):
 
     result = naiveBayes.score(x_test, y_test)
 
-    del naiveBayes
+    del naiveBayes, x_data, y_data, x_train, x_test, y_train, y_test
 
     # print(result)
 
