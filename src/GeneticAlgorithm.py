@@ -12,8 +12,6 @@ import gc
 # roda o AG
 def run(population, eliteSize, mutationRate, generations, trajectories):
 
-    # tracemalloc.start()
-
     gen = population
 
     # tracemalloc.start()
@@ -24,7 +22,11 @@ def run(population, eliteSize, mutationRate, generations, trajectories):
 
         print("[" + str(datetime.datetime.now()) + "] " + "Generation " + str(i) )
 
-        gen, betterScore = nextGeneration(currentGen=gen, eliteSize=eliteSize, mutationRate=mutationRate, trajectories=trajectories)
+        newGen, betterScore = nextGeneration(currentGen=gen, eliteSize=eliteSize, mutationRate=mutationRate, trajectories=trajectories)
+
+        del gen
+
+        gen = newGen
 
         # betterScore = 0
         # for i in gen:
@@ -57,28 +59,29 @@ def nextGeneration(currentGen, eliteSize, mutationRate, trajectories):
 
     # rankeia os individuos
     print("[" + str(datetime.datetime.now()) + "] rankPopulation")
-    popRanked = Fitness.rankPopulation(population=currentGen, trajectories=trajectories)
+    population = Fitness.rankPopulation(population=currentGen, trajectories=trajectories)
     
     # seleciona os melhores para reprodução
     print("[" + str(datetime.datetime.now()) + "] selection")
-    selectionResults = Fitness.selection(popRanked=popRanked, eliteSize=eliteSize)
+    population = Fitness.selection(popRanked=population, eliteSize=eliteSize)
 
-    bestRanked = selectionResults[0].score
+    bestRanked = population[0].score
 
     # limpa a variavel da memoria        
-    del popRanked
+    # del popRanked
 
 
     # faz o crossover entre os individuos
     print("[" + str(datetime.datetime.now()) + "] crossover")
-    children = MatingPool.breedPopulation(matingpool=selectionResults, eliteSize=eliteSize)
+    children = MatingPool.breedPopulation(matingpool=population, eliteSize=eliteSize)
 
     # limpa a variavel da memoria
-    del selectionResults
+    del population
 
     # faz a mutação dos indivíduos
     print("[" + str(datetime.datetime.now()) + "] mutation")
-    nextGeneration = MatingPool.mutatePopulation(population=children, mutationRate=mutationRate)
+    children = MatingPool.mutatePopulation(population=children, mutationRate=mutationRate)
+
     
-    return nextGeneration, bestRanked
+    return children, bestRanked
     

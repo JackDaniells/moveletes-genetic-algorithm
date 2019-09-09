@@ -1,6 +1,8 @@
 
-import random, uuid
+import random, uuid, gc
 
+
+from src import Fitness
 
 # classe movelet
 class Movelet:
@@ -93,6 +95,8 @@ def create(trajetories, individualSize, populationSize, moveletMaxSize, moveletM
 
     population = []
 
+    scoreSaved = []
+
     #  cria os individuos
     for q in range(0, populationSize):
 
@@ -118,17 +122,40 @@ def create(trajetories, individualSize, populationSize, moveletMaxSize, moveletM
                 s = random.randrange(moveletMinSize, t.size() - start)
 
             if s > moveletMaxSize:
-                s = moveletMaxSize 
+                s = moveletMaxSize
 
             # cria o movelet
             movelet = Movelet(trajectory=t,start=start, size=s, maxSize=moveletMaxSize, minSize=moveletMinSize)
-
            
             # print(movelet)
 
             movelets.append(movelet)
 
+            gc.collect()
+
         ind = Individual(movelets=movelets, score=0)
+
+        ind.score = Fitness.rankIndividual(ind, trajetories)
+
+        print(ind.score)
+
+        # for i in scoreSaved:
+        #     print(' ------ ' + str(i))
+        #     if i == ind.score:
+                
+        #         print('Score igual, recalculando pra ter certeza')
+        #         print(Fitness.rankIndividual(ind, trajetories))
+        #         print('-----------------------------------------')
+
+        #     else:
+        #         print('nenhum igual')
+        #         scoreSaved.append(ind.score)
+
+        # if len(scoreSaved) == 0:
+        #     scoreSaved.append(ind.score)
+
+
+        del movelets
 
         # print('============================================')
         

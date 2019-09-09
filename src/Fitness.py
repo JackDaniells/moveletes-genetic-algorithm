@@ -11,7 +11,9 @@ def rankIndividual(individual, trajectories):
 
     # print("[" + str(datetime.datetime.now()) + "] " + "Calculating Individual Fitness...")
 
-    if individual.score == 0:
+    score = individual.score
+
+    if score == 0:
 
         # print("[" + str(datetime.datetime.now()) + "] getting distance matrix..")
     
@@ -21,7 +23,7 @@ def rankIndividual(individual, trajectories):
 
         # print("[" + str(datetime.datetime.now()) + "] calcing score...")
 
-        individual.score = Classification.calculateScore(distanceMatix)
+        score = Classification.calculateScore(distanceMatix)
 
         # print("[" + str(datetime.datetime.now()) + "] " + "Done!")
 
@@ -31,22 +33,24 @@ def rankIndividual(individual, trajectories):
 
         gc.collect()
 
-    print("[" + str(datetime.datetime.now()) + "] " + str(individual.score) + ' - ' + str(individual))
+    # print("[" + str(datetime.datetime.now()) + "] " + str(score) + ' - ' + str(individual))
     
-    return individual
+    return score
     
 
 def rankPopulation(population, trajectories):
-    
-    fitness = []
-    
+        
     for ind in population:
 
-        ftnss = rankIndividual(individual=ind, trajectories=trajectories)
+        ind.score = rankIndividual(individual=ind, trajectories=trajectories)
         
-        fitness.append(ftnss)
+        # fitness.append(ind)
 
-    return sorted(fitness, key = operator.attrgetter('score'), reverse = True)
+        gc.collect()
+
+    # del population
+
+    return sorted(population, key = operator.attrgetter('score'), reverse = True)
 
 
 def selection(popRanked, eliteSize):
@@ -113,7 +117,7 @@ def selection(popRanked, eliteSize):
         
     #             break
 
-    del popConverted
+    del popConverted, popRanked
     
     return selectionResults
 
