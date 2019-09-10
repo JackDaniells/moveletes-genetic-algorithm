@@ -95,8 +95,6 @@ def create(trajetories, individualSize, populationSize, moveletMaxSize, moveletM
 
     population = []
 
-    scoreSaved = []
-
     #  cria os individuos
     for q in range(0, populationSize):
 
@@ -136,8 +134,6 @@ def create(trajetories, individualSize, populationSize, moveletMaxSize, moveletM
         ind = Individual(movelets=movelets, score=0)
 
         # ind.score = Fitness.rankIndividual(ind, trajetories)
-
-        del movelets
         
         population.append(ind)
 

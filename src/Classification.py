@@ -3,6 +3,7 @@ import timeit, numpy, time, datetime
 
 from sklearn.svm import SVR
 
+# import pyopencl as cl
 
 from sklearn.naive_bayes import GaussianNB, MultinomialNB
 from scipy.spatial.distance import euclidean
@@ -40,6 +41,11 @@ def calculateDistanceMatrix(individual, trajectories):
         tp = trajectory.getPoints()
 
         dataMatrixCol = []    
+
+        # #this line would create a context
+        # cntxt = cl.create_some_context()
+        # #now create a command queue in the context
+        # queue = cl.CommandQueue(cntxt)
         
         # itera o individuo
         for j in range(0, len(individual.movelets)):
@@ -68,28 +74,63 @@ def calculateDistanceMatrix(individual, trajectories):
                 # movelet.distances = []
 
                 mp = movelet.getPoints()
+
+                # create the buffers to hold the values of the input
+                # mp_buf = cl.Buffer(cntxt, cl.mem_flags.READ_ONLY | cl.mem_flags.COPY_HOST_PTR,hostbuf=mp)
+                # tp_buf = cl.Buffer(cntxt, cl.mem_flags.READ_ONLY | cl.mem_flags.COPY_HOST_PTR,hostbuf=tp)
+
+                # dist_buf = cl.Buffer(cntxt, cl.mem_flags.WRITE_ONLY, distance.nbytes)
+
+                # code = """
+
+                #     #include <math.h>
+
+                #     __kernel void calc_distance(__global int* moveletPoints, __global int* trajectoryPoints,__global int distance) 
+                #     {
+
+                #         moveletsIteractions = sizeof(moveletPoints)
+
+
+                #         trajectoryIteractions = sizeof(trajectoryPoints) - sizeof(moveletPoints) + 1
+
+                #         for (t = 0; t < sizeof(trajectoryIteractions); t++) {
+
+                #             int distanceCalculated = 0
+
+                #             for (int m = 0; m < sizeof(moveletsIteractions); m++) {
+
+                #                 int p = t + m
+
+                #                 distanceCalculated += sqrt(pow((trajectoryPoints[p][0] - moveletPoints[m][0]), 2) + pow((trajectoryPoints[p][1] - moveletPoints[m][1]), 2))
+
+                #             }
+                                
+                #             if (distanceCalculated > 0)
+                #                 distanceCalculated = distanceCalculated / sizeof(moveletPoints)
+
+                #             if (distanceCalculated < distance || t == 0)
+                #                 distance = distanceCalculated
+                            
+                            
+
+                #         }
+        
+                #     }
+                # """
+
+                # # build the Kernel
+                # bld = cl.Program(cntxt, code).build()
+                # # Kernel is now launched
+                # launch = bld.calc_distance(queue, mp_buf.shape, mp_buf,tp_buf,dist_buf)
+                # # wait till the process completes
+                # launch.wait()
+
+                # cl.enqueue_read_buffer(queue, dist_buf, distance).wait()
+
+                # print(distance)
+
                 
-                moveletsIteractions = len(mp)
-
-                trajectoryIteractions = len(tp) - len(mp) + 1
-
-                for t in range(0, trajectoryIteractions):
-
-                    distanceCalculated = 0
-
-                    for m in range(0, moveletsIteractions):
-
-                        p = t + m
-
-                        distanceCalculated += euclidean(tp[p], mp[m])
-                        
-                    # divide a distancia pela qtde de movelets
-                    if distanceCalculated > 0:
-                        distanceCalculated = distanceCalculated / len(mp)
-
-                    # se a distancia calculada for menor que zero ou for a primeira iteração 
-                    if distanceCalculated < distance or t == 0:
-                        distance = distanceCalculated
+                distance = calculateMovetelDistance(moveletPoints=mp, trajectoryPoints=tp)
 
                 movelet.distances.append(distance)
 
@@ -112,12 +153,40 @@ def calculateDistanceMatrix(individual, trajectories):
 
 
 
+def calculateMovetelDistance(moveletPoints, trajectoryPoints):
+
+    distance = 0
+
+    moveletsIteractions = len(moveletPoints)
+
+
+    trajectoryIteractions = len(trajectoryPoints) - len(moveletPoints) + 1
+
+    for t in range(0, trajectoryIteractions):
+
+        distanceCalculated = 0
+
+        for m in range(0, moveletsIteractions):
+
+            p = t + m
+
+            distanceCalculated += euclidean(trajectoryPoints[p], moveletPoints[m])
+            
+        # divide a distancia pela qtde de movelets
+        if distanceCalculated > 0:
+            distanceCalculated = distanceCalculated / len(moveletPoints)
+
+        # se a distancia calculada for menor que zero ou for a primeira iteração 
+        if distanceCalculated < distance or t == 0:
+            distance = distanceCalculated
+        
+        
+    return distance
+
 
 
 def calculateScore(dataMatrix):
-    
-    CROSS_VALIDATION_FOLDS = 2
-    
+        
     # print("[" + str(datetime.datetime.now()) + "] " + "classification started")
 
     naiveBayes = GaussianNB(priors=None, var_smoothing=1e-09)
@@ -160,9 +229,9 @@ def calculateScore(dataMatrix):
 
     naiveBayes.fit(x_train, y_train)
 
-    saveInCSV(x_train, y_train)
+    # saveInCSV(x_train, y_train)
 
-    saveInCSV(x_test, y_test)
+    # saveInCSV(x_test, y_test)
 
     result = naiveBayes.score(x_test, y_test)
 
