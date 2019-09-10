@@ -54,24 +54,20 @@ def calculateDistanceMatrix(individual, trajectories):
 
             distance = 0
 
-            # print(movelet.distances)
-
             # só calcula se o movelet nao for da trajetoria em questao, senao distancia = 0            
             if trajectory.fileName == movelet.trajectory.fileName:
                 distance = 0
 
             # verifica se a distancia ja esta calculada
-            elif len(movelet.distances) == len(trajectories):
+            elif trajectory.fileName in movelet.distances:
 
                 # print('array de distancias calculada')
 
-                distance = movelet.distances[i]
+                distance = movelet.distances[trajectory.fileName]
 
             else:
 
                 # print('array de distancias nao calculada')
-
-                # movelet.distances = []
 
                 mp = movelet.getPoints()
 
@@ -132,7 +128,7 @@ def calculateDistanceMatrix(individual, trajectories):
                 
                 distance = calculateMovetelDistance(moveletPoints=mp, trajectoryPoints=tp)
 
-                movelet.distances.append(distance)
+                movelet.distances[trajectory.fileName] = distance
 
             dataMatrixCol.append(distance)
 
