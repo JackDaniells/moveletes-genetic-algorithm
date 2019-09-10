@@ -1,5 +1,9 @@
 09/09
 
+parallel:
+https://www.machinelearningplus.com/python/parallel-processing-python/
+
+opencl:
 https://karthikhegde.blogspot.com/2013/09/opencl-for-beginners.html
 https://karthikhegde.blogspot.com/2013/09/hope-you-liked-previous-introductory.html
 
