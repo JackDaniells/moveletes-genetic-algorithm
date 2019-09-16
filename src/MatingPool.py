@@ -75,11 +75,18 @@ def mutateIndividual(individual, mutationRate):
     return individual
 
 
-def mutatePopulation(population, mutationRate):
+def mutatePopulation(population, mutationRate, eliteSize):
     
     mutatedPop = []
+
+    length = len(population) - eliteSize
+
+    for i in range(0,eliteSize):
+        mutatedPop.append(population[i])
     
-    for individual in population:
+    for i in range(eliteSize, length):
+
+        individual = population[i]
 
         if(random.random() < mutationRate):
             mutatedInd = mutateIndividual(individual=individual, mutationRate=mutationRate)

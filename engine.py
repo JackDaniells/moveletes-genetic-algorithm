@@ -9,7 +9,7 @@ MOVELET_MAX_SIZE = 5
 
 def run(DATASET_NAME, INDIVIDUAL_SIZE, POPULATION_SIZE, ELITE_SIZE, MUTATION_RATE, GENERATIONS):
 
-    if POPULATION_SIZE < ELITE_SIZE:
+    if POPULATION_SIZE <= ELITE_SIZE:
         print ('PARAMETROS INCORRETOS')
         return
 
@@ -55,8 +55,8 @@ def run(DATASET_NAME, INDIVIDUAL_SIZE, POPULATION_SIZE, ELITE_SIZE, MUTATION_RAT
     plt.title(plotTitle)
     plt.ylabel('Fitness')
     plt.xlabel('Generation')
-    # plt.show()
+    plt.show()
 
-    plt.savefig('results/' + DATASET_NAME + '_' + str(int(finishTime.timestamp())) + '.png')
+    # plt.savefig('results/' + DATASET_NAME + '_' + str(int(finishTime.timestamp())) + '.png')
 
     print("[" + str(datetime.datetime.now()) + "] " + "Program completed!")

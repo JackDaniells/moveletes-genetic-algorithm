@@ -7,6 +7,7 @@ import gc
 
 # import tracemalloc
 
+NOT_CONVERGENCE_LIMIT = 30
 
 
 # roda o AG
@@ -17,6 +18,10 @@ def run(population, eliteSize, mutationRate, generations, trajectories):
     # tracemalloc.start()
     
     progress = []
+
+    tempBetterScore = 0
+
+    notConvergenceCount = 0
     
     for i in range(0, generations):
 
@@ -28,14 +33,31 @@ def run(population, eliteSize, mutationRate, generations, trajectories):
 
         gen = newGen
 
-        # betterScore = 0
-        # for i in gen:
-        #     if i.score > betterScore:
-        #         betterScore = i.score
+        betterScore = 0
+
+        for i in newGen:
+            print(i)
+            if i.score > betterScore:
+                betterScore = i.score
 
         progress.append(betterScore)
 
         print(betterScore)
+
+        # para o processamento quando nao tem mais convergencia
+        if betterScore == tempBetterScore:
+            notConvergenceCount += 1
+        
+        else:
+            tempBetterScore = betterScore
+            notConvergenceCount = 0
+
+        if notConvergenceCount == NOT_CONVERGENCE_LIMIT and NOT_CONVERGENCE_LIMIT:
+            # print('PARADA FORÇADA POR NAO CONVERGENCIA')
+            return progress
+
+
+
 
         gc.collect()
 
@@ -80,7 +102,7 @@ def nextGeneration(currentGen, eliteSize, mutationRate, trajectories):
 
     # faz a mutação dos indivíduos
     print("[" + str(datetime.datetime.now()) + "] mutation")
-    children = MatingPool.mutatePopulation(population=children, mutationRate=mutationRate)
+    children = MatingPool.mutatePopulation(population=children, mutationRate=mutationRate, eliteSize=eliteSize)
 
     
     return children, bestRanked
