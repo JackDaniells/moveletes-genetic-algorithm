@@ -3,6 +3,8 @@ import timeit, numpy, time, datetime
 
 from sklearn.svm import SVR
 
+import multiprocessing
+
 # import pyopencl as cl
 
 from sklearn.naive_bayes import GaussianNB, MultinomialNB
@@ -16,22 +18,70 @@ from sklearn import preprocessing
 
 DECIMAL_FIELDS = 8
 
-    
+# ----------------------------------------------------------
+def calculateMovetelDistance(movelet, trajectory, trajectoryPoints):
 
+    # print('[calculateMovetelDistance]')
+    # movelet = individual.movelets[moveletPosition]
+
+    distance = 0
+
+    # só calcula se o movelet nao for da trajetoria em questao, senao distancia = 0            
+    if trajectory.fileName == movelet.trajectory.fileName:
+        distance = 0
+
+    # verifica se a distancia ja esta calculada
+    elif trajectory.fileName in movelet.distances:
+
+        # print('array de distancias calculada')
+
+        distance = movelet.distances[trajectory.fileName]
+
+    else:
+
+        # print('array de distancias nao calculada')
+
+        moveletPoints = movelet.getPoints()
+
+        distance = 0
+
+        moveletsIteractions = len(moveletPoints)
+
+        trajectoryIteractions = len(trajectoryPoints) - len(moveletPoints) + 1
+
+        for t in range(0, trajectoryIteractions):
+
+            distanceCalculated = 0
+
+            for m in range(0, moveletsIteractions):
+
+                p = t + m
+
+                distanceCalculated += euclidean(trajectoryPoints[p], moveletPoints[m])
+                
+            # divide a distancia pela qtde de movelets
+            if distanceCalculated > 0:
+                distanceCalculated = distanceCalculated / len(moveletPoints)
+
+            # se a distancia calculada for menor que zero ou for a primeira iteração 
+            if distanceCalculated < distance or t == 0:
+                distance = distanceCalculated
+
+        
+    movelet.distances[trajectory.fileName] = distance
+            
+    return distance
+
+
+# ----------------------------------------------------------
 def calculateDistanceMatrix(individual, trajectories):
 
     # print("[" + str(datetime.datetime.now()) + "] " + "calculateDistanceMatrix start")
-
 
     dataMatrix = {
         'data': [],
         'classes': []
     }
-
-    dataMatrixCol = []
-
-    # print(hex(id(dataMatrix)))
-
 
     # itera as trajetorias
     for i in range(0, len(trajectories)):
@@ -40,151 +90,24 @@ def calculateDistanceMatrix(individual, trajectories):
 
         tp = trajectory.getPoints()
 
-        dataMatrixCol = []    
+        dataMatrixCol = [calculateMovetelDistance(movelet, trajectory, tp) for movelet in individual.movelets]  
 
-        # #this line would create a context
-        # cntxt = cl.create_some_context()
-        # #now create a command queue in the context
-        # queue = cl.CommandQueue(cntxt)
+        # print('start pool')
+        # pool = multiprocessing.Pool(processes=multiprocessing.cpu_count())
+        # dataMatrixCol = [pool.apply(calculateMovetelDistance, args=(movelet, tp)) for movelet in individual.movelets]
+        # print('end pool')
         
-        # itera o individuo
-        for j in range(0, len(individual.movelets)):
-
-            movelet = individual.movelets[j]
-
-            distance = 0
-
-            # print(movelet.distances)
-
-            # só calcula se o movelet nao for da trajetoria em questao, senao distancia = 0            
-            if trajectory.fileName == movelet.trajectory.fileName:
-                distance = 0
-
-            # verifica se a distancia ja esta calculada
-            elif len(movelet.distances) == len(trajectories):
-
-                # print('array de distancias calculada')
-
-                distance = movelet.distances[i]
-
-            else:
-
-                # print('array de distancias nao calculada')
-
-                # movelet.distances = []
-
-                mp = movelet.getPoints()
-
-                # create the buffers to hold the values of the input
-                # mp_buf = cl.Buffer(cntxt, cl.mem_flags.READ_ONLY | cl.mem_flags.COPY_HOST_PTR,hostbuf=mp)
-                # tp_buf = cl.Buffer(cntxt, cl.mem_flags.READ_ONLY | cl.mem_flags.COPY_HOST_PTR,hostbuf=tp)
-
-                # dist_buf = cl.Buffer(cntxt, cl.mem_flags.WRITE_ONLY, distance.nbytes)
-
-                # code = """
-
-                #     #include <math.h>
-
-                #     __kernel void calc_distance(__global int* moveletPoints, __global int* trajectoryPoints,__global int distance) 
-                #     {
-
-                #         moveletsIteractions = sizeof(moveletPoints)
-
-
-                #         trajectoryIteractions = sizeof(trajectoryPoints) - sizeof(moveletPoints) + 1
-
-                #         for (t = 0; t < sizeof(trajectoryIteractions); t++) {
-
-                #             int distanceCalculated = 0
-
-                #             for (int m = 0; m < sizeof(moveletsIteractions); m++) {
-
-                #                 int p = t + m
-
-                #                 distanceCalculated += sqrt(pow((trajectoryPoints[p][0] - moveletPoints[m][0]), 2) + pow((trajectoryPoints[p][1] - moveletPoints[m][1]), 2))
-
-                #             }
-                                
-                #             if (distanceCalculated > 0)
-                #                 distanceCalculated = distanceCalculated / sizeof(moveletPoints)
-
-                #             if (distanceCalculated < distance || t == 0)
-                #                 distance = distanceCalculated
-                            
-                            
-
-                #         }
-        
-                #     }
-                # """
-
-                # # build the Kernel
-                # bld = cl.Program(cntxt, code).build()
-                # # Kernel is now launched
-                # launch = bld.calc_distance(queue, mp_buf.shape, mp_buf,tp_buf,dist_buf)
-                # # wait till the process completes
-                # launch.wait()
-
-                # cl.enqueue_read_buffer(queue, dist_buf, distance).wait()
-
-                # print(distance)
-
-                
-                distance = calculateMovetelDistance(moveletPoints=mp, trajectoryPoints=tp)
-
-                movelet.distances.append(distance)
-
-            dataMatrixCol.append(distance)
+        # pool.close()
 
         dataMatrix['data'].append(dataMatrixCol)
         dataMatrix['classes'].append(trajectory.group)
-
-        del dataMatrixCol
-
-    # print(dataMatrix)
-
-    dataReturn = dataMatrix.copy()
-
-    del dataMatrix
-
+                    
     # print("[" + str(datetime.datetime.now()) + "] " + "calculateDistanceMatrix end")
 
-    return dataReturn
+    return dataMatrix
 
 
-
-def calculateMovetelDistance(moveletPoints, trajectoryPoints):
-
-    distance = 0
-
-    moveletsIteractions = len(moveletPoints)
-
-
-    trajectoryIteractions = len(trajectoryPoints) - len(moveletPoints) + 1
-
-    for t in range(0, trajectoryIteractions):
-
-        distanceCalculated = 0
-
-        for m in range(0, moveletsIteractions):
-
-            p = t + m
-
-            distanceCalculated += euclidean(trajectoryPoints[p], moveletPoints[m])
-            
-        # divide a distancia pela qtde de movelets
-        if distanceCalculated > 0:
-            distanceCalculated = distanceCalculated / len(moveletPoints)
-
-        # se a distancia calculada for menor que zero ou for a primeira iteração 
-        if distanceCalculated < distance or t == 0:
-            distance = distanceCalculated
-        
-        
-    return distance
-
-
-
+# ----------------------------------------------------------
 def calculateScore(dataMatrix):
         
     # print("[" + str(datetime.datetime.now()) + "] " + "classification started")

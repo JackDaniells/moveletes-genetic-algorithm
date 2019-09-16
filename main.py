@@ -6,13 +6,14 @@ import engine
 # 3 = 4_patel_animals
 # 4 = 5_patel_vehicle
 
+
 engine.run(
     DATASET_NAME='1_patel_hurricane_2vs3', 
-    INDIVIDUAL_SIZE=5, 
-    POPULATION_SIZE=5, 
-    ELITE_SIZE=1, 
-    MUTATION_RATE=0.1, 
-    GENERATIONS=350
+    INDIVIDUAL_SIZE=10, 
+    POPULATION_SIZE=10, 
+    ELITE_SIZE=2, 
+    MUTATION_RATE=0.01, 
+    GENERATIONS=10
 )
 
 # engine.run(

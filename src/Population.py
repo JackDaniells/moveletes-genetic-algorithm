@@ -11,7 +11,7 @@ class Movelet:
         self.trajectory = trajectory
         self.start = start
         self.size = size
-        self.distances = []
+        self.distances = {}
         self.minSize = minSize
         self.maxSize = maxSize
 
@@ -38,7 +38,7 @@ class Movelet:
         ]
 
         # limpa o array de distancias
-        self.distances = []
+        self.distances.clear()
 
 
         mutationType = mutateOptions[random.randrange(len(mutateOptions))]
