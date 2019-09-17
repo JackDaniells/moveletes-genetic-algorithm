@@ -1,0 +1,66 @@
+
+{
+    "x": {
+        "value": "lat",
+        "distance": "euclidean"
+    },
+    "y": {
+        "value": "lon",
+        "distance": "euclidean"
+    }, 
+    "time": {
+        "value": "date_time",
+        "distance": "euclidean"
+    },
+    "attributes": [
+        {
+            "value": "tid",
+            "group": true,
+            "type": "Number",
+            "distance": "euclidean"
+        },
+        {
+            "value": "label",
+            "group": false,
+            "type": "Number",
+            "distance": "euclidean"
+        },
+        {
+            "value": "day",
+            "group": false,
+            "type": "String",
+            "distance": "levenshtein"
+        },
+        {
+            "value": "poi",
+            "group": false,
+            "type": "String",
+            "distance": "levenshtein"
+        },
+        {
+            "value": "root_category",
+            "group": false,
+            "type": "Number",
+            "distance": "difference"
+        },
+        {
+            "value": "poi_price",
+            "group": false,
+            "type": "Number",
+            "distance": "difference"
+        },
+        {
+            "value": "poi_rating",
+            "group": false,
+            "type": "String",
+            "distance": "levenshtein"
+        },
+        {
+            "value": "weather",
+            "group": false,
+            "type": "String",
+            "distance": "levenshtein"
+        }
+    ]
+}
+   

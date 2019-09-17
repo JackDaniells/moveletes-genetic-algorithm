@@ -6,14 +6,16 @@ import engine
 # 3 = 4_patel_animals
 # 4 = 5_patel_vehicle
 
+# 5 = Foursquare
+
 
 
 engine.run(
-    DATASET_NAME='1_patel_hurricane_2vs3', 
+    DATASET_NAME='Foursquare', 
     INDIVIDUAL_SIZE=100, 
     POPULATION_SIZE=100, 
     ELITE_SIZE=5, 
-    MUTATION_RATE=0.01, 
+    MUTATION_RATE=0.3, 
     GENERATIONS=350
 )
 

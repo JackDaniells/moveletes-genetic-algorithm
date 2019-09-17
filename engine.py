@@ -4,8 +4,8 @@ import matplotlib.pyplot as plt
 import datetime
 
 
-MOVELET_MIN_SIZE = 4
-MOVELET_MAX_SIZE = 5
+MOVELET_MIN_SIZE = 1
+MOVELET_MAX_SIZE = 2
 
 def run(DATASET_NAME, INDIVIDUAL_SIZE, POPULATION_SIZE, ELITE_SIZE, MUTATION_RATE, GENERATIONS):
 
@@ -17,9 +17,18 @@ def run(DATASET_NAME, INDIVIDUAL_SIZE, POPULATION_SIZE, ELITE_SIZE, MUTATION_RAT
 
 
     #le as trajetorias
-    print("[" + str(datetime.datetime.now()) + "] " + "Reading files from dataset" + DATASET_NAME  + "...")
 
-    trajectories = Trajectory.readDataset(DATASET_NAME, MOVELET_MAX_SIZE)
+    print("[" + str(datetime.datetime.now()) + "] " + "Reading files from dataset " + DATASET_NAME  + "...")
+
+    if DATASET_NAME == 'Foursquare':
+
+        trajectories = Trajectory.readCSV(MOVELET_MIN_SIZE)
+
+    else:
+
+        trajectories = Trajectory.readDataset(DATASET_NAME, MOVELET_MIN_SIZE)
+
+    
 
     print("[" + str(datetime.datetime.now()) + "] " + "Trajectories found: " + str(len(trajectories)))
 

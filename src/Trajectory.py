@@ -1,13 +1,14 @@
 
-import os
+import os, pandas, json
 
 
 #  classe ponto
 class Point:
-    def __init__(self, time, x, y):
+    def __init__(self, x, y, time, attributes):
         self.x = x
         self.y = y
         self.time = time 
+        self.attributes = attributes
     
     def __repr__(self):
         return "(" + str(self.time) + " , " + str(self.x) + " " + str(self.y) + ")"
@@ -43,6 +44,7 @@ class Trajectory:
 
     def __repr__(self):
         return "(" + str(self.fileName) + ": \t" + str(self.dataset) + " - " + str(self.group) + ")"
+
 
 
 # retorna a classe da trajetoria com base no nome do arquivo
@@ -86,19 +88,9 @@ def getDataset(d):
 # le os arquivos das pastas e retorna as trajetorias 
 def readDataset (datasetName, minSize): 
 
-    # foldersName = [
-    #     '1_patel_hurricane_2vs3',
-    #     '2_patel_hurricane_1vs4',
-    #     '3_patel_hurricane_0vs45',
-    #     '4_patel_animals',
-    #     '5_patel_vehicle',
-    # ]
-
     experimental = "E1"
 
     trajectories = []
-
-    # for datasetPosition in range(0, len(foldersName)):
 
     dataset = getDataset(datasetName)
 
@@ -139,7 +131,7 @@ def readFiles(filePath, dataset, minSize, datasetName):
             i = i.replace('\n', '')
             s = i.split(',')
             xy = s[1].split(' ')
-            p = Point(time=float(s[0]), x=float(xy[0]), y=float(xy[1]))
+            p = Point(time=float(s[0]), x=float(xy[0]), y=float(xy[1]), attributes={})
 
             trajectory.addPoint(p)
 
@@ -149,4 +141,56 @@ def readFiles(filePath, dataset, minSize, datasetName):
             trajectories.append(trajectory)
 
     return trajectories
+
+
+
+
+def readCSV(minSize):
+
+    df = pandas.read_csv('./datasets/Foursquare/data.csv')
+
+    trajectories = []
+
+    with open('./datasets/Foursquare/description.json', 'r') as f:
+        description = json.load(f)
+
+    print(description)
+
+    grouped = df.groupby('tid')
+
+    for name, group in grouped:
+
+        trajectory = Trajectory(fileName=name, dataset='', group='', datasetName='')
+
+        for index, row in group.iterrows():
+
+            # print(row['label']) 
+
+            att = {}
+            
+            for a in description['attributes']:
+
+                att[a['value']] = row[a['value']]
+           
+                # "label": row['label'],
+                # "day": row['day'],
+                # "poi": row['poi'],
+                # 'root_category': row['root_category'],
+                # "poi_price": row['poi_price'], 
+                # "poi_rating": row['poi_rating'],
+                # "weather": row['weather']
+            
+
+            print(att)
+
+            p = Point(time=row[description['time']['value']], x=float(row[description['x']['value']]), y=float(row[description['y']['value']]), attributes=att)
+
+            trajectory.addPoint(p)
+
+        if trajectory.size() > minSize:
+            trajectories.append(trajectory)
+
+    return trajectories
+
+
 
