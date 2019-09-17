@@ -154,9 +154,9 @@ def readCSV(minSize):
     with open('./datasets/Foursquare/description.json', 'r') as f:
         description = json.load(f)
 
-    print(description)
+    # print(description)
 
-    grouped = df.groupby('tid')
+    grouped = df.groupby(description['groupby']['value'])
 
     for name, group in grouped:
 
@@ -170,18 +170,7 @@ def readCSV(minSize):
             
             for a in description['attributes']:
 
-                att[a['value']] = row[a['value']]
-           
-                # "label": row['label'],
-                # "day": row['day'],
-                # "poi": row['poi'],
-                # 'root_category': row['root_category'],
-                # "poi_price": row['poi_price'], 
-                # "poi_rating": row['poi_rating'],
-                # "weather": row['weather']
-            
-
-            print(att)
+                att[a['value']] = row[a['value']]      
 
             p = Point(time=row[description['time']['value']], x=float(row[description['x']['value']]), y=float(row[description['y']['value']]), attributes=att)
 
