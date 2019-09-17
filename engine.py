@@ -50,7 +50,7 @@ def run(DATASET_NAME, INDIVIDUAL_SIZE, POPULATION_SIZE, ELITE_SIZE, MUTATION_RAT
     diffTime =  finishTime - startTime
 
     # imprime o progresso 
-    plotTitle = DATASET_NAME + '_g' + str(GENERATIONS) + '_p' + str(POPULATION_SIZE) + '_i' + str(INDIVIDUAL_SIZE) + '_e' + str(ELITE_SIZE) + '_t' + str(diffTime)
+    plotTitle = DATASET_NAME + '_g' + str(GENERATIONS) + '_p' + str(POPULATION_SIZE) + '_i' + str(INDIVIDUAL_SIZE) + '_e' + str(ELITE_SIZE) + '_m' + str(MUTATION_RATE) + '_t' + str(diffTime)
     plt.plot(progress)
     plt.title(plotTitle)
     plt.ylabel('Fitness')

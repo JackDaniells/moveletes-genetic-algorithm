@@ -7,7 +7,7 @@ import gc
 
 # import tracemalloc
 
-NOT_CONVERGENCE_LIMIT = 30
+NOT_CONVERGENCE_LIMIT = 0
 
 
 # roda o AG
@@ -33,12 +33,12 @@ def run(population, eliteSize, mutationRate, generations, trajectories):
 
         gen = newGen
 
-        betterScore = 0
+        # betterScore = 0
 
-        for i in newGen:
-            print(i)
-            if i.score > betterScore:
-                betterScore = i.score
+        # for i in newGen:
+        #     print(i)
+        #     if i.score > betterScore:
+        #         betterScore = i.score
 
         progress.append(betterScore)
 
@@ -52,7 +52,7 @@ def run(population, eliteSize, mutationRate, generations, trajectories):
             tempBetterScore = betterScore
             notConvergenceCount = 0
 
-        if notConvergenceCount == NOT_CONVERGENCE_LIMIT and NOT_CONVERGENCE_LIMIT:
+        if notConvergenceCount == NOT_CONVERGENCE_LIMIT and NOT_CONVERGENCE_LIMIT != 0:
             # print('PARADA FORÇADA POR NAO CONVERGENCIA')
             return progress
 
