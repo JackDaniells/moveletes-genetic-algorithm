@@ -3,7 +3,7 @@ import timeit, numpy, time, datetime
 
 from sklearn.svm import SVR
 
-import multiprocessing
+import multiprocessing, json
 
 # import pyopencl as cl
 
@@ -15,14 +15,23 @@ from sklearn.metrics import classification_report
 
 from sklearn import preprocessing
 
+from lib import levenshtein
+
 
 DECIMAL_FIELDS = 8
 
+
+# 1 = holdout
+# 2 = cross-validation
+CLASSIFICATION_METHOD = 1
+
 # ----------------------------------------------------------
-def calculateMovetelDistance(movelet, trajectory, trajectoryPoints):
+def calculateMovetelDistance(movelet, trajectory):
 
     # print('[calculateMovetelDistance]')
     # movelet = individual.movelets[moveletPosition]
+
+    trajectoryPoints = trajectory.getPoints()
 
     distance = 0
 
@@ -53,15 +62,78 @@ def calculateMovetelDistance(movelet, trajectory, trajectoryPoints):
 
             distanceCalculated = 0
 
+
+            # calcula a distancia do movelet para a trajetoria
             for m in range(0, moveletsIteractions):
 
                 p = t + m
 
-                distanceCalculated += euclidean(trajectoryPoints[p], moveletPoints[m])
+                # trajetorias multiaspecto
+                if trajectory.datasetName == 'Foursquare':
+                    
+                    with open('./datasets/Foursquare/description.json', 'r') as f:
+                        description = json.load(f)
+
+                    xyDistance = euclidean(trajectoryPoints[p].getPosition(), moveletPoints[m].getPosition())
+
+                    attDist = 0
+
+                    for a in description['attributes']:
+
+                        dst = 0
+
+                        tValue = trajectoryPoints[p].attributes[a['value']]
+                        mValue = moveletPoints[m].attributes[a['value']]
+
+                        if a['type'] == 'String':
+                            mValue = str(mValue)
+                            tValue = str(tValue)
+                        elif a['type'] == 'Number':
+                            mValue = float(mValue)
+                            tValue = float(tValue)
+
+
+
+                        if a['distance'] == 'levenshtein':
+
+                            dst = levenshtein.distance(str(tValue), str(mValue), True)
+
+                        if a['distance'] == 'weekday':
+
+                            weekdays =  ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']
+
+                            tp = 1 if tValue in weekdays else 0       
+                
+                            mp = 1 if mValue in weekdays else 0
+
+                            dst = 0 if tp == mp else 1
+
+                        if a['distance'] == 'binary':
+
+                            dst = 0 if tValue == mValue else 1
+
+                        elif a['distance'] == 'difference':
+                            
+                            dst = abs(float(tValue) - float(mValue))
+
+                        attDist += dst
+
+                    
+                    distanceCalculated += (attDist + xyDistance) /  len(description['attributes']) + 1
+
+
+
+
+                # trajetorias normais
+                else:
+
+                    distanceCalculated += euclidean(trajectoryPoints[p], moveletPoints[m])
                 
             # divide a distancia pela qtde de movelets
             if distanceCalculated > 0:
                 distanceCalculated = distanceCalculated / len(moveletPoints)
+
+            print(distanceCalculated) 
 
             # se a distancia calculada for menor que zero ou for a primeira iteração 
             if distanceCalculated < distance or t == 0:
@@ -88,9 +160,7 @@ def calculateDistanceMatrix(individual, trajectories):
 
         trajectory = trajectories[i]
 
-        tp = trajectory.getPoints()
-
-        dataMatrixCol = [calculateMovetelDistance(movelet, trajectory, tp) for movelet in individual.movelets]  
+        dataMatrixCol = [calculateMovetelDistance(movelet, trajectory) for movelet in individual.movelets]  
 
         # print('start pool')
         # pool = multiprocessing.Pool(processes=multiprocessing.cpu_count())
@@ -116,49 +186,58 @@ def calculateScore(dataMatrix):
     
     # normaliza e padroniza dos dados
 
-    x_data = preprocessing.normalize(dataMatrix['data'])
-
     # x_data = dataMatrix['data']
 
     # x_data = preprocessing.KBinsDiscretizer(n_bins=50, encode='ordinal', strategy='uniform').fit(dataMatrix['data'])
 
     # x_data = x_data.transform(dataMatrix['data'])
 
+    x_data = preprocessing.normalize(dataMatrix['data'])
+
     y_data = dataMatrix['classes']
 
     # salva o csv dos arquivos
     # saveInCSV(x_data, y_data)
 
+    result = 0
+
+
+    if CLASSIFICATION_METHOD == 1:
+
+
+        x_train, x_test, y_train, y_test = train_test_split(
+            x_data,  
+            y_data, 
+            test_size=0.4, 
+            train_size=0.6, 
+            random_state=None,
+            shuffle=True
+        )
+
+        naiveBayes.fit(x_train, y_train)
+
+        # saveInCSV(x_train, y_train)
+
+        # saveInCSV(x_test, y_test)
+
+        result = naiveBayes.score(x_test, y_test)
+
+        del naiveBayes, x_data, y_data, x_train, x_test, y_train, y_test
+
+
+
+    elif CLASSIFICATION_METHOD == 2:
+
     # cross validation
-    # gs = GridSearchCV(naiveBayes, cv=CROSS_VALIDATION_FOLDS, param_grid={}, return_train_score=False, n_jobs=-1, iid=True) 
+        gs = GridSearchCV(naiveBayes, cv=CROSS_VALIDATION_FOLDS, param_grid={}, return_train_score=False, n_jobs=-1, iid=True) 
 
 
-    # gs.fit(x_data, y_data)
+        gs.fit(x_data, y_data)
 
-    # result = gs.cv_results_['mean_test_score'][0]
+        result = gs.cv_results_['mean_test_score'][0]
 
-    # del gs
-
-    # print(dataMatrix['data'][0])
-
-    x_train, x_test, y_train, y_test = train_test_split(
-        x_data,  
-        y_data, 
-        test_size=0.4, 
-        train_size=0.6, 
-        random_state=None,
-        shuffle=True
-    )
-
-    naiveBayes.fit(x_train, y_train)
-
-    # saveInCSV(x_train, y_train)
-
-    # saveInCSV(x_test, y_test)
-
-    result = naiveBayes.score(x_test, y_test)
-
-    del naiveBayes, x_data, y_data, x_train, x_test, y_train, y_test
+        del gs
+        
 
     # print(result)
 

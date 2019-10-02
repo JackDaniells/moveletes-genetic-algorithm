@@ -32,12 +32,18 @@ class Trajectory:
 
     def getPoints(self):
         
+       return self.points
+
+    
+    def getPositions(self):
+
         ret = []
 
         for p in self.points:
             ret.append(p.getPosition())
 
         return ret
+
 
     def size(self):
         return len(self.points)
@@ -159,10 +165,13 @@ def readCSV(minSize):
     grouped = df.groupby(description['groupby']['value'])
 
     for name, group in grouped:
-
-        trajectory = Trajectory(fileName=name, dataset='', group='', datasetName='')
+        
+        trajectory = Trajectory(fileName=name, dataset='', group='', datasetName='Foursquare')
 
         for index, row in group.iterrows():
+
+            # print(str(index) + ' ' +  str(row[description['class']['value']]))
+            trajectory.group = row[description['class']['value']]
 
             # print(row['label']) 
 

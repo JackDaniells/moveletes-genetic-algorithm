@@ -10,32 +10,25 @@
     }, 
     "time": {
         "value": "date_time",
-        "distance": "euclidean"
+        "distance": "difference"
     },
     "groupby": {
-        "value": "tid",
-        "distance": "euclidean"
+        "value": "tid"
+    },
+    "class": {
+        "value": "label"
     },
     "attributes": [
-        {
-            "value": "label",
-            "type": "Number",
-            "distance": "euclidean"
-        },
+
         {
             "value": "day",
             "type": "String",
-            "distance": "levenshtein"
-        },
-        {
-            "value": "poi",
-            "type": "String",
-            "distance": "levenshtein"
+            "distance": "weekday"
         },
         {
             "value": "root_category",
-            "type": "Number",
-            "distance": "difference"
+            "type": "String",
+            "distance": "binary"
         },
         {
             "value": "poi_price",
@@ -50,7 +43,7 @@
         {
             "value": "weather",
             "type": "String",
-            "distance": "levenshtein"
+            "distance": "binary"
         }
     ]
 }

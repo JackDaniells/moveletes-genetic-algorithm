@@ -8,17 +8,13 @@ import engine
 
 # 5 = Foursquare
 
-
-
 engine.run(
     DATASET_NAME='Foursquare', 
-    INDIVIDUAL_SIZE=100, 
-    POPULATION_SIZE=100, 
-    ELITE_SIZE=5, 
-    MUTATION_RATE=0.3, 
+    INDIVIDUAL_SIZE=35, 
+    POPULATION_SIZE=20, 
+    ELITE_SIZE=2, 
+    MUTATION_RATE=0.2, 
     GENERATIONS=350
 )
-
-
 
 

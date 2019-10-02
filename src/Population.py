@@ -21,9 +21,13 @@ class Movelet:
 
         points = self.trajectory.points[sObject]
 
+        return points
+
+    def getPositions(self):
+
         ret = []
 
-        for p in points:
+        for p in self.getPoints():
             ret.append(p.getPosition())
 
         return ret

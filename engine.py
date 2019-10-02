@@ -64,8 +64,10 @@ def run(DATASET_NAME, INDIVIDUAL_SIZE, POPULATION_SIZE, ELITE_SIZE, MUTATION_RAT
     plt.title(plotTitle)
     plt.ylabel('Fitness')
     plt.xlabel('Generation')
-    plt.show()
+    # plt.show()
 
-    # plt.savefig('results/' + DATASET_NAME + '_' + str(int(finishTime.timestamp())) + '.png')
+    plt.savefig('results/' + DATASET_NAME + '_' + str(int(finishTime.timestamp())) + '.png')
+
+    plt.clf()
 
     print("[" + str(datetime.datetime.now()) + "] " + "Program completed!")

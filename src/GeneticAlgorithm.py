@@ -7,7 +7,7 @@ import gc
 
 # import tracemalloc
 
-NOT_CONVERGENCE_LIMIT = 0
+NOT_CONVERGENCE_LIMIT = 30
 
 
 # roda o AG

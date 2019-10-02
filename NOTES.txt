@@ -1,3 +1,16 @@
+24/09
+
+- rodar os testes no moveletes simples e colocar os resultados na monografia
+- terminar de implementar o Master moveletes
+
+
+17/09
+
+- qual a classe da trajetoria do Foursquare?
+- como calcular a matriz de distancias?
+- validar os métodos de distancias do description.json
+
+
 09/09
 
 parallel:
