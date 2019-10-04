@@ -18,7 +18,7 @@ from sklearn.metrics import classification_report
 
 from sklearn import preprocessing
 
-from lib import levenshtein
+# from lib import levenshtein
 
 
 DECIMAL_FIELDS = 8
@@ -40,8 +40,8 @@ def getDistance(first, second, attribute):
         first = float(first)
 
 
-    if attribute['distance'] == 'levenshtein':
-        dst = levenshtein.distance(str(first), str(second), True)
+    # if attribute['distance'] == 'levenshtein':
+    #     dst = levenshtein.distance(str(first), str(second), True)
 
     if attribute['distance'] == 'weekday':
         weekdays =  ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']
@@ -53,8 +53,8 @@ def getDistance(first, second, attribute):
         dst = 0 if first == second else 1
 
     elif attribute['distance'] == 'difference':
-        first = first if first != -999 else 5
-        second = second if second != -999 else 5
+        first = first if int(first) != -999 else 5
+        second = second if int(second) != -999 else 5
         dst = abs(first - second)
 
     return dst
