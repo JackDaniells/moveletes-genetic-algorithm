@@ -5,6 +5,9 @@ from sklearn.svm import SVR
 
 import multiprocessing, json
 
+from datetime import datetime
+import time
+
 # import pyopencl as cl
 
 from sklearn.naive_bayes import GaussianNB, MultinomialNB
@@ -24,6 +27,38 @@ DECIMAL_FIELDS = 8
 # 1 = holdout
 # 2 = cross-validation
 CLASSIFICATION_METHOD = 1
+
+def getDistance(first, second, attribute):
+
+    dst = 0
+
+    if attribute['type'] == 'String':
+        second = str(second)
+        first = str(first)
+    elif attribute['type'] == 'Number':
+        second = float(second)
+        first = float(first)
+
+
+    if attribute['distance'] == 'levenshtein':
+        dst = levenshtein.distance(str(first), str(second), True)
+
+    if attribute['distance'] == 'weekday':
+        weekdays =  ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']
+        tp = 1 if first in weekdays else 0       
+        mp = 1 if second in weekdays else 0
+        dst = 0 if tp == mp else 1
+
+    elif attribute['distance'] == 'binary':
+        dst = 0 if first == second else 1
+
+    elif attribute['distance'] == 'difference':
+        first = first if first != -999 else 5
+        second = second if second != -999 else 5
+        dst = abs(first - second)
+
+    return dst
+
 
 # ----------------------------------------------------------
 def calculateMovetelDistance(movelet, trajectory):
@@ -74,55 +109,28 @@ def calculateMovetelDistance(movelet, trajectory):
                     with open('./datasets/Foursquare/description.json', 'r') as f:
                         description = json.load(f)
 
-                    xyDistance = euclidean(trajectoryPoints[p].getPosition(), moveletPoints[m].getPosition())
+                    # calcula a di
+                    # stancia dos pontos
+                    movelet.attributeDistances['point'] = euclidean(trajectoryPoints[p].getPosition(), moveletPoints[m].getPosition())
 
-                    attDist = 0
+                    # calcula a distancia do tempo
+                    a = datetime.strptime(trajectoryPoints[p].time, '%Y-%m-%d %H:%M:%S')
+                    b = datetime.strptime(moveletPoints[m].time, '%Y-%m-%d %H:%M:%S')
+
+                    d1_ts = time.mktime(a.timetuple())
+                    d2_ts = time.mktime(b.timetuple())
+
+                    movelet.attributeDistances['time'] = abs((d2_ts-d1_ts) / 60)
 
                     for a in description['attributes']:
-
-                        dst = 0
 
                         tValue = trajectoryPoints[p].attributes[a['value']]
                         mValue = moveletPoints[m].attributes[a['value']]
 
-                        if a['type'] == 'String':
-                            mValue = str(mValue)
-                            tValue = str(tValue)
-                        elif a['type'] == 'Number':
-                            mValue = float(mValue)
-                            tValue = float(tValue)
+                        # retorna a distancia entre os atributos
+                        movelet.attributeDistances[a['value']] = getDistance(first=tValue, second=mValue, attribute=a)
 
-
-
-                        if a['distance'] == 'levenshtein':
-
-                            dst = levenshtein.distance(str(tValue), str(mValue), True)
-
-                        if a['distance'] == 'weekday':
-
-                            weekdays =  ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']
-
-                            tp = 1 if tValue in weekdays else 0       
-                
-                            mp = 1 if mValue in weekdays else 0
-
-                            dst = 0 if tp == mp else 1
-
-                        if a['distance'] == 'binary':
-
-                            dst = 0 if tValue == mValue else 1
-
-                        elif a['distance'] == 'difference':
-                            
-                            dst = abs(float(tValue) - float(mValue))
-
-                        attDist += dst
-
-                    
-                    distanceCalculated += (attDist + xyDistance) /  len(description['attributes']) + 1
-
-
-
+                    # distanceCalculated += (attDist + xyDistance) /  len(description['attributes']) + 1
 
                 # trajetorias normais
                 else:
@@ -133,7 +141,7 @@ def calculateMovetelDistance(movelet, trajectory):
             if distanceCalculated > 0:
                 distanceCalculated = distanceCalculated / len(moveletPoints)
 
-            print(distanceCalculated) 
+            # print(distanceCalculated) 
 
             # se a distancia calculada for menor que zero ou for a primeira iteração 
             if distanceCalculated < distance or t == 0:

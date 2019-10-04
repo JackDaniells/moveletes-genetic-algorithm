@@ -12,6 +12,7 @@ class Movelet:
         self.start = start
         self.size = size
         self.distances = {}
+        self.attributeDistances = {}
         self.minSize = minSize
         self.maxSize = maxSize
 

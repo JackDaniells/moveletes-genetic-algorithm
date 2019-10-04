@@ -9,8 +9,7 @@
         "distance": "euclidean"
     }, 
     "time": {
-        "value": "date_time",
-        "distance": "difference"
+        "value": "date_time"
     },
     "groupby": {
         "value": "tid"
