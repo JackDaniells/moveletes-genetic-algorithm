@@ -103,6 +103,8 @@ def calculateMovetelDistance(movelet, trajectory):
 
                 p = t + m
 
+                moveletDistances = {}
+
                 # trajetorias multiaspecto
                 if trajectory.datasetName == 'Foursquare':
                     
@@ -111,7 +113,7 @@ def calculateMovetelDistance(movelet, trajectory):
 
                     # calcula a di
                     # stancia dos pontos
-                    movelet.attributeDistances['point'] = euclidean(trajectoryPoints[p].getPosition(), moveletPoints[m].getPosition())
+                    moveletDistances['point'] = euclidean(trajectoryPoints[p].getPosition(), moveletPoints[m].getPosition())
 
                     # calcula a distancia do tempo
                     a = datetime.strptime(trajectoryPoints[p].time, '%Y-%m-%d %H:%M:%S')
@@ -120,22 +122,31 @@ def calculateMovetelDistance(movelet, trajectory):
                     d1_ts = time.mktime(a.timetuple())
                     d2_ts = time.mktime(b.timetuple())
 
-                    movelet.attributeDistances['time'] = abs((d2_ts-d1_ts) / 60)
+                    moveletDistances['time'] = abs((d2_ts-d1_ts) / 60)
 
+                    # calcula a distancia para cada atributo
                     for a in description['attributes']:
 
                         tValue = trajectoryPoints[p].attributes[a['value']]
                         mValue = moveletPoints[m].attributes[a['value']]
 
                         # retorna a distancia entre os atributos
-                        movelet.attributeDistances[a['value']] = getDistance(first=tValue, second=mValue, attribute=a)
+                        moveletDistances[a['value']] = getDistance(first=tValue, second=mValue, attribute=a)
 
                     # distanceCalculated += (attDist + xyDistance) /  len(description['attributes']) + 1
+
+                    movelet.attributeDistances.append(moveletDistances)
 
                 # trajetorias normais
                 else:
 
                     distanceCalculated += euclidean(trajectoryPoints[p], moveletPoints[m])
+
+            if trajectory.datasetName == 'Foursquare':
+
+                distanceCalculated = masterAlignment(movelet.attributeDistances)
+
+
                 
             # divide a distancia pela qtde de movelets
             if distanceCalculated > 0:
