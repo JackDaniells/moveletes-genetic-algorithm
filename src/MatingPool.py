@@ -79,7 +79,7 @@ def mutatePopulation(population, mutationRate, eliteSize):
     
     mutatedPop = []
 
-    length = len(population) - eliteSize
+    length = len(population)
 
     for i in range(0,eliteSize):
         mutatedPop.append(population[i])

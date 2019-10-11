@@ -9,12 +9,13 @@ import engine
 
 
 engine.run(
-    DATASET_NAME='1_patel_hurricane_2vs3', 
-    INDIVIDUAL_SIZE=100, 
-    POPULATION_SIZE=100, 
-    ELITE_SIZE=5, 
-    MUTATION_RATE=0.01, 
-    GENERATIONS=350
+    EXPERIMENTAL='E2',
+    DATASET_NAME='1_patel_hurricane_2vs3',
+    INDIVIDUAL_SIZE=10,
+    POPULATION_SIZE=10,
+    ELITE_SIZE=1,
+    MUTATION_RATE=0.05,
+    GENERATIONS=100
 )
 
 

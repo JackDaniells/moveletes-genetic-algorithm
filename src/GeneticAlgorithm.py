@@ -7,7 +7,7 @@ import gc
 
 # import tracemalloc
 
-NOT_CONVERGENCE_LIMIT = 0
+NOT_CONVERGENCE_LIMIT = 35
 
 
 # roda o AG
@@ -19,6 +19,10 @@ def run(population, eliteSize, mutationRate, generations, trajectories):
     
     progress = []
 
+    avgProgress = []
+
+    worstProgress = []
+
     tempBetterScore = 0
 
     notConvergenceCount = 0
@@ -27,7 +31,7 @@ def run(population, eliteSize, mutationRate, generations, trajectories):
 
         print("[" + str(datetime.datetime.now()) + "] " + "Generation " + str(i) )
 
-        newGen, betterScore = nextGeneration(currentGen=gen, eliteSize=eliteSize, mutationRate=mutationRate, trajectories=trajectories)
+        newGen, betterScore, avgScore, worstScore, bestIndividual = nextGeneration(currentGen=gen, eliteSize=eliteSize, mutationRate=mutationRate, trajectories=trajectories)
 
         del gen
 
@@ -42,6 +46,10 @@ def run(population, eliteSize, mutationRate, generations, trajectories):
 
         progress.append(betterScore)
 
+        avgProgress.append(avgScore)
+
+        worstProgress.append(worstScore)
+
         print(betterScore)
 
         # para o processamento quando nao tem mais convergencia
@@ -52,9 +60,19 @@ def run(population, eliteSize, mutationRate, generations, trajectories):
             tempBetterScore = betterScore
             notConvergenceCount = 0
 
+        if notConvergenceCount > 0 and notConvergenceCount % 10 == 0:
+            mutationRate = mutationRate * 2
+            if mutationRate > 0.5: 
+                mutationRate = 0.5
+            print('---------------------------------')
+            print('---------------------------------')
+            print('mutationRate: ' + str(mutationRate))
+            print('---------------------------------')
+            print('---------------------------------')
+
         if notConvergenceCount == NOT_CONVERGENCE_LIMIT and NOT_CONVERGENCE_LIMIT != 0:
             # print('PARADA FORÇADA POR NAO CONVERGENCIA')
-            return progress
+            return progress, bestIndividual
 
 
 
@@ -73,7 +91,7 @@ def run(population, eliteSize, mutationRate, generations, trajectories):
         # for stat in top_stats[:10]:
         #     print(stat)
     
-    return progress
+    return progress, bestIndividual
 
 
 # crias as novas gerações da população
@@ -82,12 +100,28 @@ def nextGeneration(currentGen, eliteSize, mutationRate, trajectories):
     # rankeia os individuos
     print("[" + str(datetime.datetime.now()) + "] rankPopulation")
     population = Fitness.rankPopulation(population=currentGen, trajectories=trajectories)
+
+    bestRanked = population[0].score
+
+    bestIndividual = population[0]
+
+    worstRanked = population[len(population) - 1].score
+
+    avgScore = 0
+
+    for p in population:
+        avgScore += p.score
+
+    avgScore = avgScore / len(population)
+
+    # print('Fitness.rankPopulation '  + str(len(population)))
     
     # seleciona os melhores para reprodução
     print("[" + str(datetime.datetime.now()) + "] selection")
     population = Fitness.selection(popRanked=population, eliteSize=eliteSize)
 
-    bestRanked = population[0].score
+    # print('Fitness.selection '  + str(len(population)))
+
 
     # limpa a variavel da memoria        
     # del popRanked
@@ -97,6 +131,9 @@ def nextGeneration(currentGen, eliteSize, mutationRate, trajectories):
     print("[" + str(datetime.datetime.now()) + "] crossover")
     children = MatingPool.breedPopulation(matingpool=population, eliteSize=eliteSize)
 
+    # print('MatingPool.breedPopulation '  + str(len(children)))
+
+
     # limpa a variavel da memoria
     del population
 
@@ -104,6 +141,8 @@ def nextGeneration(currentGen, eliteSize, mutationRate, trajectories):
     print("[" + str(datetime.datetime.now()) + "] mutation")
     children = MatingPool.mutatePopulation(population=children, mutationRate=mutationRate, eliteSize=eliteSize)
 
+    # print('MatingPool.mutatePopulation '  + str(len(children)))
+
     
-    return children, bestRanked
+    return children, bestRanked, avgScore, worstRanked, bestIndividual
     

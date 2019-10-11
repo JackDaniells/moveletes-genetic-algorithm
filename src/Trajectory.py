@@ -84,7 +84,7 @@ def getDataset(d):
 
 
 # le os arquivos das pastas e retorna as trajetorias 
-def readDataset (datasetName, minSize): 
+def readDataset (experimental, fileType, datasetName, minSize): 
 
     # foldersName = [
     #     '1_patel_hurricane_2vs3',
@@ -94,15 +94,13 @@ def readDataset (datasetName, minSize):
     #     '5_patel_vehicle',
     # ]
 
-    experimental = "E1"
-
     trajectories = []
 
     # for datasetPosition in range(0, len(foldersName)):
 
     dataset = getDataset(datasetName)
 
-    filePath = "./datasets/" + experimental + "/" + datasetName + '/train'
+    filePath = "./datasets/" + experimental + "/" + datasetName + '/' + fileType
 
     t = readFiles(filePath=filePath, dataset=dataset, minSize=minSize, datasetName=datasetName)
 

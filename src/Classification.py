@@ -19,7 +19,7 @@ from sklearn import preprocessing
 DECIMAL_FIELDS = 8
 
 # ----------------------------------------------------------
-def calculateMovetelDistance(movelet, trajectory, trajectoryPoints):
+def calculateMovetelDistance(movelet, trajectory, trajectoryPoints, fileType):
 
     # print('[calculateMovetelDistance]')
     # movelet = individual.movelets[moveletPosition]
@@ -27,11 +27,11 @@ def calculateMovetelDistance(movelet, trajectory, trajectoryPoints):
     distance = 0
 
     # só calcula se o movelet nao for da trajetoria em questao, senao distancia = 0            
-    if trajectory.fileName == movelet.trajectory.fileName:
+    if trajectory.fileName == movelet.trajectory.fileName and fileType == 'train':
         distance = 0
 
     # verifica se a distancia ja esta calculada
-    elif trajectory.fileName in movelet.distances:
+    elif trajectory.fileName in movelet.distances and fileType == 'train':
 
         # print('array de distancias calculada')
 
@@ -68,13 +68,14 @@ def calculateMovetelDistance(movelet, trajectory, trajectoryPoints):
                 distance = distanceCalculated
 
         
-    movelet.distances[trajectory.fileName] = distance
+    if fileType == 'train':
+        movelet.distances[trajectory.fileName] = distance
             
     return distance
 
 
 # ----------------------------------------------------------
-def calculateDistanceMatrix(individual, trajectories):
+def calculateDistanceMatrix(individual, trajectories, fileType = 'train'):
 
     # print("[" + str(datetime.datetime.now()) + "] " + "calculateDistanceMatrix start")
 
@@ -90,7 +91,7 @@ def calculateDistanceMatrix(individual, trajectories):
 
         tp = trajectory.getPoints()
 
-        dataMatrixCol = [calculateMovetelDistance(movelet, trajectory, tp) for movelet in individual.movelets]  
+        dataMatrixCol = [calculateMovetelDistance(movelet, trajectory, tp, fileType) for movelet in individual.movelets]  
 
         # print('start pool')
         # pool = multiprocessing.Pool(processes=multiprocessing.cpu_count())
@@ -108,7 +109,7 @@ def calculateDistanceMatrix(individual, trajectories):
 
 
 # ----------------------------------------------------------
-def calculateScore(dataMatrix):
+def calculateScore(dataMatrixTrain, dataMatrixTest = {}):
         
     # print("[" + str(datetime.datetime.now()) + "] " + "classification started")
 
@@ -116,7 +117,22 @@ def calculateScore(dataMatrix):
     
     # normaliza e padroniza dos dados
 
-    x_data = preprocessing.normalize(dataMatrix['data'])
+    x_train = preprocessing.normalize(dataMatrixTrain['data'])
+    y_train = dataMatrixTrain['classes']
+
+    x_test = []
+    y_test = []
+
+    # print(len(dataMatrixTest))
+
+    if len(dataMatrixTest) == 0:
+        x_test = preprocessing.normalize(dataMatrixTrain['data'])
+        y_test = dataMatrixTrain['classes']
+    else:
+        x_test = preprocessing.normalize(dataMatrixTest['data'])
+        y_test = dataMatrixTest['classes']
+
+
 
     # x_data = dataMatrix['data']
 
@@ -124,7 +140,7 @@ def calculateScore(dataMatrix):
 
     # x_data = x_data.transform(dataMatrix['data'])
 
-    y_data = dataMatrix['classes']
+    
 
     # salva o csv dos arquivos
     # saveInCSV(x_data, y_data)
@@ -141,14 +157,14 @@ def calculateScore(dataMatrix):
 
     # print(dataMatrix['data'][0])
 
-    x_train, x_test, y_train, y_test = train_test_split(
-        x_data,  
-        y_data, 
-        test_size=0.4, 
-        train_size=0.6, 
-        random_state=None,
-        shuffle=True
-    )
+    # x_train, x_test, y_train, y_test = train_test_split(
+    #     x_data,  
+    #     y_data, 
+    #     test_size=0.4, 
+    #     train_size=0.6, 
+    #     random_state=None,
+    #     shuffle=True
+    # )
 
     naiveBayes.fit(x_train, y_train)
 
@@ -158,7 +174,7 @@ def calculateScore(dataMatrix):
 
     result = naiveBayes.score(x_test, y_test)
 
-    del naiveBayes, x_data, y_data, x_train, x_test, y_train, y_test
+    # del naiveBayes, x_data, y_data, x_train, x_test, y_train, y_test
 
     # print(result)
 
