@@ -27,15 +27,15 @@ def calculateMovetelDistance(movelet, trajectory, trajectoryPoints, fileType):
     distance = 0
 
     # só calcula se o movelet nao for da trajetoria em questao, senao distancia = 0            
-    if trajectory.fileName == movelet.trajectory.fileName and fileType == 'train':
+    if trajectory.fileName == movelet.trajectory.fileName and trajectory.fileType == movelet.trajectory.fileType:
         distance = 0
 
     # verifica se a distancia ja esta calculada
-    elif trajectory.fileName in movelet.distances and fileType == 'train':
+    elif trajectory.fileName in movelet.distances[trajectory.fileType]:
 
         # print('array de distancias calculada')
 
-        distance = movelet.distances[trajectory.fileName]
+        distance = movelet.distances[trajectory.fileType][trajectory.fileName]
 
     else:
 
@@ -66,10 +66,8 @@ def calculateMovetelDistance(movelet, trajectory, trajectoryPoints, fileType):
             # se a distancia calculada for menor que zero ou for a primeira iteração 
             if distanceCalculated < distance or t == 0:
                 distance = distanceCalculated
-
         
-    if fileType == 'train':
-        movelet.distances[trajectory.fileName] = distance
+    movelet.distances[trajectory.fileType][trajectory.fileName] = distance
             
     return distance
 

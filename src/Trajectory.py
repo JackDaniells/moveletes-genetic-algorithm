@@ -19,9 +19,10 @@ class Point:
 
 # classe trajetoria
 class Trajectory:
-    def __init__(self, fileName, dataset, group, datasetName):
+    def __init__(self, fileName, dataset, group, datasetName, fileType):
         self.dataset = dataset
         self.group = group
+        self.fileType = fileType
         self.fileName = fileName
         self.datasetName = datasetName
         self.points = []
@@ -79,6 +80,7 @@ def getDataset(d):
         '3_patel_hurricane_0vs45' : 'Hurricane',
         '4_patel_animals' : 'Animal',
         '5_patel_vehicle' : 'Vehicle',
+        '1_geolife70': 'Geolife'
     }[d]
 
 
@@ -86,13 +88,7 @@ def getDataset(d):
 # le os arquivos das pastas e retorna as trajetorias 
 def readDataset (experimental, fileType, datasetName, minSize): 
 
-    # foldersName = [
-    #     '1_patel_hurricane_2vs3',
-    #     '2_patel_hurricane_1vs4',
-    #     '3_patel_hurricane_0vs45',
-    #     '4_patel_animals',
-    #     '5_patel_vehicle',
-    # ]
+   
 
     trajectories = []
 
@@ -102,7 +98,7 @@ def readDataset (experimental, fileType, datasetName, minSize):
 
     filePath = "./datasets/" + experimental + "/" + datasetName + '/' + fileType
 
-    t = readFiles(filePath=filePath, dataset=dataset, minSize=minSize, datasetName=datasetName)
+    t = readFiles(filePath=filePath, dataset=dataset, minSize=minSize, datasetName=datasetName, fileType=fileType)
 
     trajectories.extend(t)
 
@@ -110,7 +106,7 @@ def readDataset (experimental, fileType, datasetName, minSize):
 
 
 # le os arquivos e monta as trajetorias
-def readFiles(filePath, dataset, minSize, datasetName): 
+def readFiles(filePath, dataset, minSize, datasetName, fileType): 
 
     trajectories = []
 
@@ -128,7 +124,7 @@ def readFiles(filePath, dataset, minSize, datasetName):
        
         group = getClass(fileName)
 
-        trajectory = Trajectory(fileName=fileName, dataset=dataset, group=group, datasetName=datasetName)
+        trajectory = Trajectory(fileType=fileType, fileName=fileName, dataset=dataset, group=group, datasetName=datasetName)
 
 
         # pega os pontos da trajetoria

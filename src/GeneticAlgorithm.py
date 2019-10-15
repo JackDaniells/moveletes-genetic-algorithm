@@ -11,7 +11,7 @@ NOT_CONVERGENCE_LIMIT = 35
 
 
 # roda o AG
-def run(population, eliteSize, mutationRate, generations, trajectories):
+def run(population, eliteSize, mutationRate, generations, trainTrajectories, testTrajectories):
 
     gen = population
 
@@ -31,7 +31,7 @@ def run(population, eliteSize, mutationRate, generations, trajectories):
 
         print("[" + str(datetime.datetime.now()) + "] " + "Generation " + str(i) )
 
-        newGen, betterScore, avgScore, worstScore, bestIndividual = nextGeneration(currentGen=gen, eliteSize=eliteSize, mutationRate=mutationRate, trajectories=trajectories)
+        newGen, betterScore, avgScore, worstScore, bestIndividual = nextGeneration(currentGen=gen, eliteSize=eliteSize, mutationRate=mutationRate, trainTrajectories=trainTrajectories, testTrajectories=testTrajectories)
 
         del gen
 
@@ -95,11 +95,12 @@ def run(population, eliteSize, mutationRate, generations, trajectories):
 
 
 # crias as novas gerações da população
-def nextGeneration(currentGen, eliteSize, mutationRate, trajectories):
+def nextGeneration(currentGen, eliteSize, mutationRate, trainTrajectories, testTrajectories):
+
 
     # rankeia os individuos
     print("[" + str(datetime.datetime.now()) + "] rankPopulation")
-    population = Fitness.rankPopulation(population=currentGen, trajectories=trajectories)
+    population = Fitness.rankPopulation(population=currentGen, trainTrajectories=trainTrajectories, testTrajectories=testTrajectories)
 
     bestRanked = population[0].score
 

@@ -6,7 +6,7 @@ from src import Classification
 
 
     
-def rankIndividual(individual, trajectories):
+def rankIndividual(individual, trainTrajectories, testTrajectories):
 
 
     # print("[" + str(datetime.datetime.now()) + "] " + "Calculating Individual Fitness...")
@@ -17,19 +17,20 @@ def rankIndividual(individual, trajectories):
 
         # print("[" + str(datetime.datetime.now()) + "] getting distance matrix..")
     
-        distanceMatix = Classification.calculateDistanceMatrix(individual=individual, trajectories=trajectories)
+        distanceMatixTrain = Classification.calculateDistanceMatrix(individual=individual, trajectories=trainTrajectories, fileType='train')
+        distanceMatixTest = Classification.calculateDistanceMatrix(individual=individual, trajectories=testTrajectories, fileType='test')
 
         # print(hex(id(distanceMatix)))
 
         # print("[" + str(datetime.datetime.now()) + "] calcing score...")
 
-        score = Classification.calculateScore(distanceMatix)
+        score = Classification.calculateScore(distanceMatixTrain, distanceMatixTest)
 
         # print("[" + str(datetime.datetime.now()) + "] " + "Done!")
 
         # salvar o dataset e fazer crossover dele tambem na reprodução pra nao precisar calcular tudo de novo
 
-        del distanceMatix
+        del distanceMatixTrain, distanceMatixTest
 
         gc.collect()
 
@@ -38,11 +39,11 @@ def rankIndividual(individual, trajectories):
     return score
     
 
-def rankPopulation(population, trajectories):
+def rankPopulation(population, trainTrajectories, testTrajectories):
         
     for ind in population:
 
-        ind.score = rankIndividual(individual=ind, trajectories=trajectories)
+        ind.score = rankIndividual(individual=ind, trainTrajectories=trainTrajectories, testTrajectories=testTrajectories)
         
         # fitness.append(ind)
 
