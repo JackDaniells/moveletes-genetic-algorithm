@@ -1,27 +1,29 @@
 # from scipy.spatial import distance
 import timeit, numpy, time, datetime
 
-from sklearn.svm import SVR
+# from sklearn.svm import SVR
 
 import multiprocessing
 
 # import pyopencl as cl
 
-from sklearn.naive_bayes import GaussianNB, MultinomialNB
+from sklearn.naive_bayes import GaussianNB
 from scipy.spatial.distance import euclidean
-from sklearn.model_selection import GridSearchCV, StratifiedKFold, train_test_split
-
-from sklearn.metrics import classification_report
+from sklearn.model_selection import GridSearchCV
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.svm import SVC
 
 from sklearn import preprocessing
 
 
-DECIMAL_FIELDS = 8
+DECIMAL_FIELDS = 4
+
+USE_CROSS_VALIDATION = False
 
 # ----------------------------------------------------------
 def calculateMovetelDistance(movelet, trajectory, trajectoryPoints, fileType):
 
-    # print('[calculateMovetelDistance]')
+    # #  print('[calculateMovetelDistance]')
     # movelet = individual.movelets[moveletPosition]
 
     distance = 0
@@ -33,13 +35,13 @@ def calculateMovetelDistance(movelet, trajectory, trajectoryPoints, fileType):
     # verifica se a distancia ja esta calculada
     elif trajectory.fileName in movelet.distances and fileType == 'train':
 
-        # print('array de distancias calculada')
+        # #  print('array de distancias calculada')
 
         distance = movelet.distances[trajectory.fileName]
 
     else:
 
-        # print('array de distancias nao calculada')
+        # #  print('array de distancias nao calculada')
 
         moveletPoints = movelet.getPoints()
 
@@ -77,12 +79,13 @@ def calculateMovetelDistance(movelet, trajectory, trajectoryPoints, fileType):
 # ----------------------------------------------------------
 def calculateDistanceMatrix(individual, trajectories, fileType = 'train'):
 
-    # print("[" + str(datetime.datetime.now()) + "] " + "calculateDistanceMatrix start")
+    # #  print("[" + str(datetime.datetime.now()) + "] " + "calculateDistanceMatrix start")
 
     dataMatrix = {
         'data': [],
         'classes': []
-    }
+    }  
+
 
     # itera as trajetorias
     for i in range(0, len(trajectories)):
@@ -91,96 +94,73 @@ def calculateDistanceMatrix(individual, trajectories, fileType = 'train'):
 
         tp = trajectory.getPoints()
 
-        dataMatrixCol = [calculateMovetelDistance(movelet, trajectory, tp, fileType) for movelet in individual.movelets]  
+        dataMatrixRow = [calculateMovetelDistance(movelet, trajectory, tp, fileType) for movelet in individual.movelets]  
 
-        # print('start pool')
-        # pool = multiprocessing.Pool(processes=multiprocessing.cpu_count())
-        # dataMatrixCol = [pool.apply(calculateMovetelDistance, args=(movelet, tp)) for movelet in individual.movelets]
-        # print('end pool')
-        
-        # pool.close()
+        dataMatrixRow.append(trajectory.duration)
+        dataMatrixRow.append(trajectory.distance)
+        dataMatrixRow.append(trajectory.avgSpeed)
 
-        dataMatrix['data'].append(dataMatrixCol)
+        dataMatrix['data'].append(dataMatrixRow)
         dataMatrix['classes'].append(trajectory.group)
-                    
-    # print("[" + str(datetime.datetime.now()) + "] " + "calculateDistanceMatrix end")
 
     return dataMatrix
 
 
 # ----------------------------------------------------------
-def calculateScore(dataMatrixTrain, dataMatrixTest = {}):
-        
-    # print("[" + str(datetime.datetime.now()) + "] " + "classification started")
+def calculateScore(experimental, method, train, test = {}):
 
-    naiveBayes = GaussianNB(priors=None, var_smoothing=1e-09)
-    
-    # normaliza e padroniza dos dados
-
-    x_train = preprocessing.normalize(dataMatrixTrain['data'])
-    y_train = dataMatrixTrain['classes']
-
-    x_test = []
-    y_test = []
-
-    # print(len(dataMatrixTest))
-
-    if len(dataMatrixTest) == 0:
-        x_test = preprocessing.normalize(dataMatrixTrain['data'])
-        y_test = dataMatrixTrain['classes']
-    else:
-        x_test = preprocessing.normalize(dataMatrixTest['data'])
-        y_test = dataMatrixTest['classes']
-
-
-
-    # x_data = dataMatrix['data']
-
-    # x_data = preprocessing.KBinsDiscretizer(n_bins=50, encode='ordinal', strategy='uniform').fit(dataMatrix['data'])
-
-    # x_data = x_data.transform(dataMatrix['data'])
+    if method == 'Bayes':
+        classifier = GaussianNB(priors=None, var_smoothing=1e-09)
+    elif method == 'SVM':
+        classifier = SVC(gamma='auto')
+    elif method == 'C45':
+        classifier = DecisionTreeClassifier(min_samples_split=10, criterion='entropy', max_depth=5)
 
     
 
-    # salva o csv dos arquivos
-    # saveInCSV(x_data, y_data)
+    # holdout
+    if experimental != 'E1':
+
+        if len(test) != 0:
+            return round(holdoutClassification(classifier, train, test), DECIMAL_FIELDS)
+        else:
+            return round(holdoutClassification(classifier, train, train), DECIMAL_FIELDS)
 
     # cross validation
-    # gs = GridSearchCV(naiveBayes, cv=CROSS_VALIDATION_FOLDS, param_grid={}, return_train_score=False, n_jobs=-1, iid=True) 
+    else:
+        return round(crossValidationClassification(classifier, train), DECIMAL_FIELDS)
+
+        
 
 
-    # gs.fit(x_data, y_data)
+     
 
-    # result = gs.cv_results_['mean_test_score'][0]
+def holdoutClassification(classifier, trainMatrix, testMatrix):
 
-    # del gs
+    # #  print('holdoutClassification')
 
-    # print(dataMatrix['data'][0])
+    x_train = trainMatrix['data']
+    y_train = trainMatrix['classes']
 
-    # x_train, x_test, y_train, y_test = train_test_split(
-    #     x_data,  
-    #     y_data, 
-    #     test_size=0.4, 
-    #     train_size=0.6, 
-    #     random_state=None,
-    #     shuffle=True
-    # )
+    x_test = testMatrix['data']
+    y_test = testMatrix['classes']
 
-    naiveBayes.fit(x_train, y_train)
+    classifier.fit(x_train, y_train)
+    return classifier.score(x_test, y_test)
+    
 
-    # saveInCSV(x_train, y_train)
+def crossValidationClassification(classifier, matrix, folds = 2):
 
-    # saveInCSV(x_test, y_test)
+    # #  print('crossValidationClassification')
 
-    result = naiveBayes.score(x_test, y_test)
+    x_train = matrix['data']
+    y_train = matrix['classes']
 
-    # del naiveBayes, x_data, y_data, x_train, x_test, y_train, y_test
+    gs = GridSearchCV(classifier, cv=folds, param_grid={}, return_train_score=False, n_jobs=-1, iid=True) 
 
-    # print(result)
+    gs.fit(x_train, y_train)
 
-    # print("[" + str(datetime.datetime.now()) + "] " + "classification end")
-
-    return round(result, DECIMAL_FIELDS)    
+    return gs.cv_results_['mean_test_score'][0]
 
 
 def saveInCSV(x, y): 

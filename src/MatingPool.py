@@ -48,20 +48,22 @@ def breedPopulation(matingpool, eliteSize):
 
 # mutação
 
-def mutateIndividual(individual, mutationRate):
+def mutateIndividual(individual, mutationRate, trajectories):
 
-    print ('Mutating individual!')
+    #  print ('Mutating individual!')
 
     mutatePos = random.randrange(0, len(individual.movelets))
 
     oldMovelet = individual.movelets[mutatePos]
 
-    newMovelet = Population.Movelet(trajectory=oldMovelet.trajectory, start=oldMovelet.start, size=oldMovelet.size, minSize=oldMovelet.minSize, maxSize=oldMovelet.maxSize)
+    # muta o movelet existente
+    # newMovelet = Population.Movelet(trajectory=oldMovelet.trajectory, start=oldMovelet.start, size=oldMovelet.size, minSize=oldMovelet.minSize, maxSize=oldMovelet.maxSize)
+    # newMovelet.mutate()
 
-    newMovelet.mutate()
+    # gera um novo movelet
+    newMovelet = Population.createRandomMovelet(trajectories, oldMovelet.minSize, oldMovelet.maxSize)
 
     individual.movelets[mutatePos] = newMovelet
-
 
     #  zera o score do individuo
     individual.cleanScore()
@@ -75,7 +77,7 @@ def mutateIndividual(individual, mutationRate):
     return individual
 
 
-def mutatePopulation(population, mutationRate, eliteSize):
+def mutatePopulation(population, mutationRate, eliteSize, trajectories):
     
     mutatedPop = []
 
@@ -89,7 +91,7 @@ def mutatePopulation(population, mutationRate, eliteSize):
         individual = population[i]
 
         if(random.random() < mutationRate):
-            mutatedInd = mutateIndividual(individual=individual, mutationRate=mutationRate)
+            mutatedInd = mutateIndividual(individual=individual, mutationRate=mutationRate, trajectories=trajectories)
         else:
             mutatedInd = individual
 

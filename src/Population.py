@@ -103,29 +103,9 @@ def create(trajetories, individualSize, populationSize, moveletMaxSize, moveletM
         # cria os movelets
         for s in range(0, individualSize):
 
-            # pega uma trajetoria aleatoriamente
-            t = trajetories[random.randrange(0, len(trajetories))]
-            
-            # t = trajetories[s % len(trajetories)]
-
-            # print(t.size())
-            # define o ponto de inicio aleatoriamente
-            start = 0
-            if t.size() > moveletMinSize:
-                start = random.randrange(0, t.size() - moveletMinSize)
-
-            # define o tamanho do movelet aleatoriamente
-            s = moveletMinSize
-            if  (t.size() - start) > moveletMinSize:
-                s = random.randrange(moveletMinSize, t.size() - start)
-
-            if s > moveletMaxSize:
-                s = moveletMaxSize
-
-            # cria o movelet
-            movelet = Movelet(trajectory=t,start=start, size=s, maxSize=moveletMaxSize, minSize=moveletMinSize)
+            movelet = createRandomMovelet(trajetories, moveletMinSize, moveletMaxSize)
            
-            # print(movelet)
+            # #  print(movelet)
 
             movelets.append(movelet)
 
@@ -138,4 +118,28 @@ def create(trajetories, individualSize, populationSize, moveletMaxSize, moveletM
         population.append(ind)
 
     return population
+
+def createRandomMovelet(trajetories, moveletMinSize, moveletMaxSize):
+
+    # pega uma trajetoria aleatoriamente
+    t = trajetories[random.randrange(0, len(trajetories))]
+    
+    # t = trajetories[s % len(trajetories)]
+
+    # #  print(t.size())
+    # define o ponto de inicio aleatoriamente
+    start = 0
+    if t.size() > moveletMinSize:
+        start = random.randrange(0, t.size() - moveletMinSize)
+
+    # define o tamanho do movelet aleatoriamente
+    s = moveletMinSize
+    if  (t.size() - start) > moveletMinSize:
+        s = random.randrange(moveletMinSize, t.size() - start)
+
+    if s > moveletMaxSize:
+        s = moveletMaxSize
+
+    # cria o movelet
+    return Movelet(trajectory=t,start=start, size=s, maxSize=moveletMaxSize, minSize=moveletMinSize)
 

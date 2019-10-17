@@ -7,11 +7,9 @@ import gc
 
 # import tracemalloc
 
-NOT_CONVERGENCE_LIMIT = 35
-
 
 # roda o AG
-def run(population, eliteSize, mutationRate, generations, trajectories):
+def run(population, eliteSize, mutationRate, generations, trajectories, notConvergenceLimit, experimental, selectionMethod, classificator):
 
     gen = population
 
@@ -29,9 +27,17 @@ def run(population, eliteSize, mutationRate, generations, trajectories):
     
     for i in range(0, generations):
 
-        print("[" + str(datetime.datetime.now()) + "] " + "Generation " + str(i) )
+        #  print("[" + str(datetime.datetime.now()) + "] " + "Generation " + str(i) )
 
-        newGen, betterScore, avgScore, worstScore, bestIndividual = nextGeneration(currentGen=gen, eliteSize=eliteSize, mutationRate=mutationRate, trajectories=trajectories)
+        newGen, betterScore, avgScore, worstScore, bestIndividual = nextGeneration(
+            currentGen=gen, 
+            eliteSize=eliteSize, 
+            mutationRate=mutationRate, 
+            trajectories=trajectories,
+            experimental=experimental,
+            selectionMethod=selectionMethod,
+            classificator=classificator
+        )
 
         del gen
 
@@ -40,7 +46,7 @@ def run(population, eliteSize, mutationRate, generations, trajectories):
         # betterScore = 0
 
         # for i in newGen:
-        #     print(i)
+        #     #  print(i)
         #     if i.score > betterScore:
         #         betterScore = i.score
 
@@ -50,7 +56,7 @@ def run(population, eliteSize, mutationRate, generations, trajectories):
 
         worstProgress.append(worstScore)
 
-        print(betterScore)
+        #  print(betterScore)
 
         # para o processamento quando nao tem mais convergencia
         if betterScore == tempBetterScore:
@@ -64,17 +70,15 @@ def run(population, eliteSize, mutationRate, generations, trajectories):
             mutationRate = mutationRate * 2
             if mutationRate > 0.5: 
                 mutationRate = 0.5
-            print('---------------------------------')
-            print('---------------------------------')
-            print('mutationRate: ' + str(mutationRate))
-            print('---------------------------------')
-            print('---------------------------------')
+            #  print('---------------------------------')
+            #  print('---------------------------------')
+            #  print('mutationRate: ' + str(mutationRate))
+            #  print('---------------------------------')
+            #  print('---------------------------------')
 
-        if notConvergenceCount == NOT_CONVERGENCE_LIMIT and NOT_CONVERGENCE_LIMIT != 0:
-            # print('PARADA FORÇADA POR NAO CONVERGENCIA')
+        if (notConvergenceCount == notConvergenceLimit and notConvergenceLimit != 0) or betterScore == 1:
+            # #  print('PARADA FORÇADA POR NAO CONVERGENCIA')
             return progress, bestIndividual
-
-
 
 
         gc.collect()
@@ -83,23 +87,23 @@ def run(population, eliteSize, mutationRate, generations, trajectories):
         # snapshot = tracemalloc.take_snapshot()
         # top_stats = snapshot.statistics('lineno')
 
-        # print("[ Top 10 ]")
+        # #  print("[ Top 10 ]")
         # for stat in top_stats[:10]:
-        #     print(stat)
+        #     #  print(stat)
 
-        # print("[ Top 10 ]")
+        # #  print("[ Top 10 ]")
         # for stat in top_stats[:10]:
-        #     print(stat)
+        #     #  print(stat)
     
     return progress, bestIndividual
 
 
 # crias as novas gerações da população
-def nextGeneration(currentGen, eliteSize, mutationRate, trajectories):
+def nextGeneration(currentGen, eliteSize, mutationRate, trajectories, experimental, selectionMethod, classificator):
 
     # rankeia os individuos
-    print("[" + str(datetime.datetime.now()) + "] rankPopulation")
-    population = Fitness.rankPopulation(population=currentGen, trajectories=trajectories)
+    #  print("[" + str(datetime.datetime.now()) + "] rankPopulation")
+    population = Fitness.rankPopulation(population=currentGen, trajectories=trajectories, experimental=experimental, classificator=classificator)
 
     bestRanked = population[0].score
 
@@ -114,13 +118,13 @@ def nextGeneration(currentGen, eliteSize, mutationRate, trajectories):
 
     avgScore = avgScore / len(population)
 
-    # print('Fitness.rankPopulation '  + str(len(population)))
+    # #  print('Fitness.rankPopulation '  + str(len(population)))
     
     # seleciona os melhores para reprodução
-    print("[" + str(datetime.datetime.now()) + "] selection")
-    population = Fitness.selection(popRanked=population, eliteSize=eliteSize)
+    #  print("[" + str(datetime.datetime.now()) + "] selection")
+    population = Fitness.selection(popRanked=population, eliteSize=eliteSize, method=selectionMethod)
 
-    # print('Fitness.selection '  + str(len(population)))
+    # #  print('Fitness.selection '  + str(len(population)))
 
 
     # limpa a variavel da memoria        
@@ -128,20 +132,20 @@ def nextGeneration(currentGen, eliteSize, mutationRate, trajectories):
 
 
     # faz o crossover entre os individuos
-    print("[" + str(datetime.datetime.now()) + "] crossover")
+    #  print("[" + str(datetime.datetime.now()) + "] crossover")
     children = MatingPool.breedPopulation(matingpool=population, eliteSize=eliteSize)
 
-    # print('MatingPool.breedPopulation '  + str(len(children)))
+    # #  print('MatingPool.breedPopulation '  + str(len(children)))
 
 
     # limpa a variavel da memoria
     del population
 
     # faz a mutação dos indivíduos
-    print("[" + str(datetime.datetime.now()) + "] mutation")
-    children = MatingPool.mutatePopulation(population=children, mutationRate=mutationRate, eliteSize=eliteSize)
+    #  print("[" + str(datetime.datetime.now()) + "] mutation")
+    children = MatingPool.mutatePopulation(population=children, mutationRate=mutationRate, eliteSize=eliteSize, trajectories=trajectories)
 
-    # print('MatingPool.mutatePopulation '  + str(len(children)))
+    # #  print('MatingPool.mutatePopulation '  + str(len(children)))
 
     
     return children, bestRanked, avgScore, worstRanked, bestIndividual

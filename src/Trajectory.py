@@ -1,5 +1,6 @@
 
 import os
+from scipy.spatial.distance import euclidean
 
 
 #  classe ponto
@@ -25,6 +26,26 @@ class Trajectory:
         self.fileName = fileName
         self.datasetName = datasetName
         self.points = []
+
+
+    def calcSpatialDimensions(self):
+
+        # duration
+        timeStart = float(self.points[0].time)
+        timeEnd = float(self.points[len(self.points) - 1].time)
+        self.duration = timeEnd - timeStart
+
+        # distance
+        distance = 0
+        for i in range(1, len(self.points)):
+            distance = euclidean(self.points[i - 1].getPosition(), self.points[i].getPosition())
+        self.distance = distance
+
+        # velocity
+        self.avgSpeed = self.distance / self.duration 
+        
+
+    
 
     def addPoint(self, p):
         self.points.append(p)
@@ -65,7 +86,15 @@ def getClass(fileName):
         'cE' : "Elk",
         # Vehicle
         'cB' : "Bus",
-        'cT' : "Truck"
+        'cT' : "Truck",
+        # Geolife
+        'cwalk' : "Walk",
+        'cbus and taxi' : "Bus/Taxi",
+        'cbus' : "Bus/Taxi",
+        'cbike' : "Bike",
+        'ccar' : "Car",
+        'csubway' : "Subway",
+        'ctrain' : "Train",
 
     }[c]
 
@@ -79,6 +108,7 @@ def getDataset(d):
         '3_patel_hurricane_0vs45' : 'Hurricane',
         '4_patel_animals' : 'Animal',
         '5_patel_vehicle' : 'Vehicle',
+        '1_geolife70' : 'Geolife',
     }[d]
 
 
@@ -120,7 +150,7 @@ def readFiles(filePath, dataset, minSize, datasetName):
 
         fileName = os.fsdecode(file)
 
-        # print(fileName)
+        # #  print(fileName)
 
         f = open(filePath + "/" + fileName,"r")
 
@@ -141,7 +171,8 @@ def readFiles(filePath, dataset, minSize, datasetName):
 
             trajectory.addPoint(p)
 
-        # print(trajectory.size())
+        # so calcula as dimensioes espaciais depois de inserir todos os pontos
+        trajectory.calcSpatialDimensions()
 
         if trajectory.size() > minSize:
             trajectories.append(trajectory)
