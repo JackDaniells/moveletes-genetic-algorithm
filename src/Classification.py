@@ -23,7 +23,7 @@ USE_CROSS_VALIDATION = False
 # ----------------------------------------------------------
 def calculateMovetelDistance(movelet, trajectory, trajectoryPoints, fileType):
 
-    # #  print('[calculateMovetelDistance]')
+    # print('[calculateMovetelDistance]')
     # movelet = individual.movelets[moveletPosition]
 
     distance = 0
@@ -35,13 +35,13 @@ def calculateMovetelDistance(movelet, trajectory, trajectoryPoints, fileType):
     # verifica se a distancia ja esta calculada
     elif trajectory.fileName in movelet.distances and fileType == 'train':
 
-        # #  print('array de distancias calculada')
+        # print('array de distancias calculada')
 
         distance = movelet.distances[trajectory.fileName]
 
     else:
 
-        # #  print('array de distancias nao calculada')
+        # print('array de distancias nao calculada')
 
         moveletPoints = movelet.getPoints()
 
@@ -79,7 +79,7 @@ def calculateMovetelDistance(movelet, trajectory, trajectoryPoints, fileType):
 # ----------------------------------------------------------
 def calculateDistanceMatrix(individual, trajectories, fileType = 'train'):
 
-    # #  print("[" + str(datetime.datetime.now()) + "] " + "calculateDistanceMatrix start")
+    # print("[" + str(datetime.datetime.now()) + "] " + "calculateDistanceMatrix start")
 
     dataMatrix = {
         'data': [],
@@ -137,7 +137,7 @@ def calculateScore(experimental, method, train, test = {}):
 
 def holdoutClassification(classifier, trainMatrix, testMatrix):
 
-    # #  print('holdoutClassification')
+    # print('holdoutClassification')
 
     x_train = trainMatrix['data']
     y_train = trainMatrix['classes']
@@ -151,7 +151,7 @@ def holdoutClassification(classifier, trainMatrix, testMatrix):
 
 def crossValidationClassification(classifier, matrix, folds = 2):
 
-    # #  print('crossValidationClassification')
+    # print('crossValidationClassification')
 
     x_train = matrix['data']
     y_train = matrix['classes']

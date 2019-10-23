@@ -105,7 +105,7 @@ def create(trajetories, individualSize, populationSize, moveletMaxSize, moveletM
 
             movelet = createRandomMovelet(trajetories, moveletMinSize, moveletMaxSize)
            
-            # #  print(movelet)
+            # print(movelet)
 
             movelets.append(movelet)
 
@@ -126,7 +126,7 @@ def createRandomMovelet(trajetories, moveletMinSize, moveletMaxSize):
     
     # t = trajetories[s % len(trajetories)]
 
-    # #  print(t.size())
+    # print(t.size())
     # define o ponto de inicio aleatoriamente
     start = 0
     if t.size() > moveletMinSize:

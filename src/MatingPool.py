@@ -5,7 +5,7 @@ import random
 
 import datetime
 
-def breedIndividual(parent1, parent2):
+def breedIndividual(parent1, parent2, trajectories):
     child = []
     childP1 = []
     childP2 = []
@@ -23,13 +23,19 @@ def breedIndividual(parent1, parent2):
 
     child = childP1 + childP2
 
+    diffLength = len(parent1.movelets) - len(child)
+    
+    if diffLength != 0:
+        for i in range(0, diffLength):
+            child.append(Population.createRandomMovelet(trajectories, parent1.movelets[0].minSize, parent1.movelets[0].maxSize))
+
     del childP1, childP2
 
     movelets = child
     return Population.Individual(movelets=movelets, score=0)
 
 
-def breedPopulation(matingpool, eliteSize):
+def breedPopulation(matingpool, eliteSize, trajectories):
 
     children = []
     length = len(matingpool) - eliteSize
@@ -39,7 +45,7 @@ def breedPopulation(matingpool, eliteSize):
         children.append(matingpool[i])
     
     for i in range(0, length):
-        child = breedIndividual(pool[i], pool[len(matingpool)-i-1])
+        child = breedIndividual(pool[i], pool[len(matingpool)-i-1], trajectories)
         children.append(child)
     
     return children
@@ -50,7 +56,7 @@ def breedPopulation(matingpool, eliteSize):
 
 def mutateIndividual(individual, mutationRate, trajectories):
 
-    #  print ('Mutating individual!')
+    print ('Mutating individual!')
 
     mutatePos = random.randrange(0, len(individual.movelets))
 

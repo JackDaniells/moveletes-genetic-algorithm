@@ -4,30 +4,45 @@ import matplotlib.pyplot as plt
 import time, datetime
 
 
-def run(EXPERIMENTAL, DATASET_NAME, CLASSIFICATOR, INDIVIDUAL_SIZE, POPULATION_SIZE, ELITE_SIZE, MUTATION_RATE, GENERATIONS, NOT_CONVERGENCE_LIMIT, MOVELET_MIN_SIZE, MOVELET_MAX_SIZE, SELECTION_METHOD):
+def run(
+    EXPERIMENTAL, 
+    DATASET_NAME, 
+    CLASSIFICATOR, 
+    INDIVIDUAL_SIZE, 
+    POPULATION_SIZE, 
+    ELITE_SIZE, 
+    MUTATION_RATE,
+    MUTATION_MULT_FACTOR,
+    MUTATION_NOT_CONVERGENCE_LIMIT,
+    GENERATIONS, 
+    NOT_CONVERGENCE_LIMIT, 
+    MOVELET_MIN_SIZE, 
+    MOVELET_MAX_SIZE, 
+    SELECTION_METHOD
+):
 
     if POPULATION_SIZE <= ELITE_SIZE:
-        #  print ('PARAMETROS INCORRETOS')
+        print ('PARAMETROS INCORRETOS')
         return
 
-    #  print("[" + str(datetime.datetime.now()) + "] " + "Program started!")
+    print("[" + str(datetime.datetime.now()) + "] " + "Program started!")
 
 
     #le as trajetorias
-    #  print("[" + str(datetime.datetime.now()) + "] " + "Reading files from dataset" + DATASET_NAME  + "...")
+    print("[" + str(datetime.datetime.now()) + "] " + "Reading files from dataset" + DATASET_NAME  + "...")
 
     trainTrajectories = Trajectory.readDataset(EXPERIMENTAL, 'train', DATASET_NAME, MOVELET_MAX_SIZE)
 
-    #  print("[" + str(datetime.datetime.now()) + "] " + "Trajectories found: " + str(len(trainTrajectories)))
+    print("[" + str(datetime.datetime.now()) + "] " + "Trajectories found: " + str(len(trainTrajectories)))
 
     # for t in trajectories:
-    #     #  print(t)
+    #     print(t)
 
 
     #cria os individuos
-    #  print("[" + str(datetime.datetime.now()) + "] " + "Creating population...")
+    print("[" + str(datetime.datetime.now()) + "] " + "Creating population...")
 
-    #  print(datetime.datetime.now())
+    print(datetime.datetime.now())
     pop = Population.create(
         trajetories=trainTrajectories, 
         individualSize=INDIVIDUAL_SIZE, 
@@ -35,23 +50,23 @@ def run(EXPERIMENTAL, DATASET_NAME, CLASSIFICATOR, INDIVIDUAL_SIZE, POPULATION_S
         moveletMinSize=MOVELET_MIN_SIZE, 
         moveletMaxSize=MOVELET_MAX_SIZE
     )
-    #  print(datetime.datetime.now())
+    print(datetime.datetime.now())
 
-    #  print("[" + str(datetime.datetime.now()) + "] " + "Population size: " + str(len(pop)))
+    print("[" + str(datetime.datetime.now()) + "] " + "Population size: " + str(len(pop)))
 
 
     #instancia o algoritmo genetico
-    #  print("[" + str(datetime.datetime.now()) + "] " + "Running Genetic Algorithm...")
-    #  print("[" + str(datetime.datetime.now()) + "] " + "Generations: " + str(GENERATIONS))
-
-    # GeneticAlgorithm.run(population=pop, eliteSize=ELITE_SIZE, mutationRate=MUTATION_RATE, generations=GENERATIONS, trajectories=trajectories)
+    print("[" + str(datetime.datetime.now()) + "] " + "Running Genetic Algorithm...")
+    print("[" + str(datetime.datetime.now()) + "] " + "Generations: " + str(GENERATIONS))
 
     startTime = int(time.time())
 
     progress, bestIndividual = GeneticAlgorithm.run(
         population=pop, 
         eliteSize=ELITE_SIZE, 
-        mutationRate=MUTATION_RATE, 
+        mutationRate=MUTATION_RATE,
+        mutationMultFactor=MUTATION_MULT_FACTOR,
+        mutationNotConvergenceLimit=MUTATION_NOT_CONVERGENCE_LIMIT,
         generations=GENERATIONS, 
         trajectories=trainTrajectories, 
         notConvergenceLimit=NOT_CONVERGENCE_LIMIT,
@@ -70,12 +85,10 @@ def run(EXPERIMENTAL, DATASET_NAME, CLASSIFICATOR, INDIVIDUAL_SIZE, POPULATION_S
     plt.title(plotTitle)
     plt.ylabel('Fitness')
     plt.xlabel('Generation')
-    plt.show()
-    # plt.savefig('results/' + DATASET_NAME + '_' + str(int(finishTime.timestamp())) + '.png')
+    # plt.show()
+    plt.savefig('results/' + DATASET_NAME + '_' + str(finishTime) + '.png')
 
     plt.clf()
-
-
 
     if EXPERIMENTAL != 'E1':
 
@@ -90,6 +103,7 @@ def run(EXPERIMENTAL, DATASET_NAME, CLASSIFICATOR, INDIVIDUAL_SIZE, POPULATION_S
 
         score = bestIndividual.score
 
-    #  print("[" + str(datetime.datetime.now()) + "] " + "Program completed!")
+    print("Best: " + str(score) + " - Time: " + str(diffTime))
+    print("[" + str(datetime.datetime.now()) + "] " + "Program completed!")
 
     return score, diffTime

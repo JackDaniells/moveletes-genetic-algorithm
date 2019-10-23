@@ -150,7 +150,7 @@ def readFiles(filePath, dataset, minSize, datasetName):
 
         fileName = os.fsdecode(file)
 
-        # #  print(fileName)
+        # print(fileName)
 
         f = open(filePath + "/" + fileName,"r")
 
