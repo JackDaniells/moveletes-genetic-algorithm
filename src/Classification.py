@@ -18,8 +18,6 @@ from sklearn import preprocessing
 
 DECIMAL_FIELDS = 4
 
-USE_CROSS_VALIDATION = False
-
 # ----------------------------------------------------------
 def calculateMovetelDistance(movelet, trajectory, trajectoryPoints, fileType):
 
@@ -149,7 +147,7 @@ def holdoutClassification(classifier, trainMatrix, testMatrix):
     return classifier.score(x_test, y_test)
     
 
-def crossValidationClassification(classifier, matrix, folds = 2):
+def crossValidationClassification(classifier, matrix, folds = 5):
 
     # print('crossValidationClassification')
 

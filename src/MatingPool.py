@@ -25,9 +25,12 @@ def breedIndividual(parent1, parent2, trajectories):
 
     diffLength = len(parent1.movelets) - len(child)
     
-    if diffLength != 0:
-        for i in range(0, diffLength):
-            child.append(Population.createRandomMovelet(trajectories, parent1.movelets[0].minSize, parent1.movelets[0].maxSize))
+    # if diffLength != 0:
+    #     print('=======================================')
+    #     print('individuo com tamanho diferente do original')
+    #     print('=======================================')
+    #     for i in range(0, diffLength):
+    #         child.append(Population.createRandomMovelet(trajectories, parent1.movelets[0].minSize, parent1.movelets[0].maxSize))
 
     del childP1, childP2
 
@@ -56,7 +59,7 @@ def breedPopulation(matingpool, eliteSize, trajectories):
 
 def mutateIndividual(individual, mutationRate, trajectories):
 
-    print ('Mutating individual!')
+    # print ('Mutating individual!')
 
     mutatePos = random.randrange(0, len(individual.movelets))
 

@@ -22,27 +22,27 @@ def run(
 ):
 
     if POPULATION_SIZE <= ELITE_SIZE:
-        print ('PARAMETROS INCORRETOS')
+        #  print ('PARAMETROS INCORRETOS')
         return
 
-    print("[" + str(datetime.datetime.now()) + "] " + "Program started!")
+    #  print("[" + str(datetime.datetime.now()) + "] " + "Program started!")
 
 
     #le as trajetorias
-    print("[" + str(datetime.datetime.now()) + "] " + "Reading files from dataset" + DATASET_NAME  + "...")
+    #  print("[" + str(datetime.datetime.now()) + "] " + "Reading files from dataset" + DATASET_NAME  + "...")
 
     trainTrajectories = Trajectory.readDataset(EXPERIMENTAL, 'train', DATASET_NAME, MOVELET_MAX_SIZE)
 
-    print("[" + str(datetime.datetime.now()) + "] " + "Trajectories found: " + str(len(trainTrajectories)))
+    #  print("[" + str(datetime.datetime.now()) + "] " + "Trajectories found: " + str(len(trainTrajectories)))
 
     # for t in trajectories:
-    #     print(t)
+    #     #  print(t)
 
 
     #cria os individuos
-    print("[" + str(datetime.datetime.now()) + "] " + "Creating population...")
+    #  print("[" + str(datetime.datetime.now()) + "] " + "Creating population...")
 
-    print(datetime.datetime.now())
+    #  print(datetime.datetime.now())
     pop = Population.create(
         trajetories=trainTrajectories, 
         individualSize=INDIVIDUAL_SIZE, 
@@ -50,14 +50,14 @@ def run(
         moveletMinSize=MOVELET_MIN_SIZE, 
         moveletMaxSize=MOVELET_MAX_SIZE
     )
-    print(datetime.datetime.now())
+    #  print(datetime.datetime.now())
 
-    print("[" + str(datetime.datetime.now()) + "] " + "Population size: " + str(len(pop)))
+    #  print("[" + str(datetime.datetime.now()) + "] " + "Population size: " + str(len(pop)))
 
 
     #instancia o algoritmo genetico
-    print("[" + str(datetime.datetime.now()) + "] " + "Running Genetic Algorithm...")
-    print("[" + str(datetime.datetime.now()) + "] " + "Generations: " + str(GENERATIONS))
+    #  print("[" + str(datetime.datetime.now()) + "] " + "Running Genetic Algorithm...")
+    #  print("[" + str(datetime.datetime.now()) + "] " + "Generations: " + str(GENERATIONS))
 
     startTime = int(time.time())
 
@@ -103,7 +103,7 @@ def run(
 
         score = bestIndividual.score
 
-    print("Best: " + str(score) + " - Time: " + str(diffTime))
-    print("[" + str(datetime.datetime.now()) + "] " + "Program completed!")
+    #  print("Best: " + str(score) + " - Time: " + str(diffTime))
+    #  print("[" + str(datetime.datetime.now()) + "] " + "Program completed!")
 
     return score, diffTime

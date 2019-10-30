@@ -35,7 +35,7 @@ def run(
     
     for i in range(0, generations):
 
-        print("[" + str(datetime.datetime.now()) + "] " + "Generation " + str(i) )
+        # print("[" + str(datetime.datetime.now()) + "] " + "Generation " + str(i) )
 
         newGen, betterScore, avgScore, worstScore, bestIndividual = nextGeneration(
             currentGen=gen, 
@@ -54,7 +54,7 @@ def run(
         avgProgress.append(avgScore)
         worstProgress.append(worstScore)
 
-        print(betterScore)
+        # print(betterScore)
 
         # para o processamento quando nao tem mais convergencia
         if betterScore == lastBetterScore:
@@ -70,7 +70,6 @@ def run(
             # fator maximo de multiplicacao e 0.5
             if mutationRate > 0.5: 
                 mutationRate = 0.5
-
 
         # retorna antecipadamente quando nao tem mais convergencia ou melhor individuo tem score = 1
         if (notConvergenceCount == notConvergenceLimit and notConvergenceLimit != 0) or betterScore == 1:
@@ -95,7 +94,7 @@ def nextGeneration(
 ):
 
     # rankeia os individuos
-    print("[" + str(datetime.datetime.now()) + "] rankPopulation")
+    # print("[" + str(datetime.datetime.now()) + "] rankPopulation")
     population = Fitness.rankPopulation(population=currentGen, trajectories=trajectories, experimental=experimental, classificator=classificator)
 
     bestRanked = population[0].score
@@ -114,13 +113,13 @@ def nextGeneration(
     # print('Fitness.rankPopulation '  + str(len(population)))
     
     # seleciona os melhores para reprodução
-    print("[" + str(datetime.datetime.now()) + "] selection")
+    # print("[" + str(datetime.datetime.now()) + "] selection")
     population = Fitness.selection(popRanked=population, eliteSize=eliteSize, method=selectionMethod)
 
     # print('Fitness.selection '  + str(len(population)))
 
     # faz o crossover entre os individuos
-    print("[" + str(datetime.datetime.now()) + "] crossover")
+    # print("[" + str(datetime.datetime.now()) + "] crossover")
     children = MatingPool.breedPopulation(matingpool=population, eliteSize=eliteSize, trajectories=trajectories)
 
     # print('MatingPool.breedPopulation '  + str(len(children)))
@@ -129,7 +128,7 @@ def nextGeneration(
     del population
 
     # faz a mutação dos indivíduos
-    print("[" + str(datetime.datetime.now()) + "] mutation")
+    # print("[" + str(datetime.datetime.now()) + "] mutation")
     children = MatingPool.mutatePopulation(population=children, mutationRate=mutationRate, eliteSize=eliteSize, trajectories=trajectories)
 
     # print('MatingPool.mutatePopulation '  + str(len(children)))

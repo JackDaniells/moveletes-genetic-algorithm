@@ -74,27 +74,41 @@ def getClass(fileName):
     
     return {
         #  Hurricane
-        'cTS' : "Scale 0",
-        'c1' : "Scale 1",
-        'c2' : "Scale 2",
-        'c3' : "Scale 3",
-        'c4' : "Scale 4",
-        'c45' : "Scale 4,5",
+        # 'cTS' : "Scale 0",
+        # 'c1' : "Scale 1",
+        # 'c2' : "Scale 2",
+        # 'c3' : "Scale 3",
+        # 'c4' : "Scale 4",
+        # 'c45' : "Scale 4,5",
+        # #  Animals
+        # 'cC' : "Cattle",
+        # 'cD' : "Deer",
+        # 'cE' : "Elk",
+        # # Vehicle
+        # 'cB' : "Bus",
+        # 'cT' : "Truck",
+        # # Geolife
+        # 'cwalk' : "Walk",
+        # 'cbus and taxi' : "Bus/Taxi",
+        # 'cbus' : "Bus/Taxi",
+        # 'cbike' : "Bike",
+        # 'ccar' : "Car",
+        # 'csubway' : "Subway",
+        # 'ctrain' : "Train",
+
+         'cTS' : 0,
+        'c1' : 1,
+        'c2' : 2,
+        'c3' : 3,
+        'c4' : 4,
+        'c45' : 5,
         #  Animals
-        'cC' : "Cattle",
-        'cD' : "Deer",
-        'cE' : "Elk",
+        'cC' : 1,
+        'cD' : 2,
+        'cE' : 3,
         # Vehicle
-        'cB' : "Bus",
-        'cT' : "Truck",
-        # Geolife
-        'cwalk' : "Walk",
-        'cbus and taxi' : "Bus/Taxi",
-        'cbus' : "Bus/Taxi",
-        'cbike' : "Bike",
-        'ccar' : "Car",
-        'csubway' : "Subway",
-        'ctrain' : "Train",
+        'cB' : 1,
+        'cT' : 2,
 
     }[c]
 
