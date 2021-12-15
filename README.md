@@ -1,6 +1,5 @@
 # Movelets-genetic-algorithm
 
-Foobar is a Python library for dealing with word pluralization.
 Este projeto é a implementação de TCC realizada por Daniel Kock com foco na criação de um novo método de classificação de trajetórias por meio de Algoritmo Genético
 
 ## Instalação
